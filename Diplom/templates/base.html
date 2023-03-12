@@ -7,12 +7,18 @@
     <title>{% block title %} Новости со всего мира {% endblock %}</title>
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" >
     <link rel="stylesheet" href="{% static 'css/style.css' %}" >
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
   </head>
   <body>
 
-  {% include 'inc/_nav.html' %}
+  
+    {% block content %}
+      Content
+    {% endblock content%}
 
-    <div class="container mt-3">
+  {% comment %} {% include 'inc/_nav.html' %} {% endcomment %}
+
+    {% comment %} <div class="container mt-3">
         <div class="row">
             <div class="col-md-3">
                 {% block sidebar %} Sidebar {% endblock %}
@@ -22,7 +28,7 @@
             </div>
 
         </div>
-    </div>
+    </div> {% endcomment %}
     <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
   </body>
 </html>

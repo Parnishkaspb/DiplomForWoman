@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Лабораторные работы
+{% endblock %}
+
+
+{% block content %}
+    {{ json_string.text|safe }}
+
+    {% for item in json_string.task %}
+        <button class='step' id='{{ item.number }}'> Задание: {{ item.number }} </button> 
+    {% endfor %}
+
+    {% for question in json_string.task %}
+    <div style='display: none' class='Question' id='block_{{question.number}}'>
+        {{ question.q }}
+        {% for option in question.var %}
+            <input type='radio' name='s_{{question.number}}' value={{ option }}> {{ option }}
+        {% endfor %}
+        <button class='answer' id='{{question.number}}'> Ответить </button>
+    </div>
+    {% endfor %}
+
+    <div id='work'></div>
+
+    <script>
+        //right_answer СПРЯТАТЬ!
+        var right_answer = ['2223','1703'];
+
+        $(function(){
+            $(".step").on("click", function(){
+
+                if (document.getElementById('block_'+this.id).style.display == 'none'){
+                    $('.Question').hide();
+                    $('#block_'+this.id).show();
+                }
+
+            });
+
+            $(".answer").on("click", function(){
+                var rad=document.getElementsByName('s_'+this.id);
+                for (var i=0;i<rad.length; i++) {
+                    if (rad[i].checked) {
+                        rad = rad[i].value;
+                    }
+                }
+
+                if (rad == right_answer[this.id-1]){
+                    alert('Вы правильно ответили на вопрос');
+                    document.getElementById(this.id).style.background = 'green';
+                } else {
+                    alert('Вы не правильно ответили на вопрос');
+                    document.getElementById(this.id).style.background = 'red';
+                }
+            });
+        }); 
+    </script>
+{% endblock %}
