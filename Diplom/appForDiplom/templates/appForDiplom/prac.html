@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Практические работы
+{% endblock %}
+
+
+{% block content %}
+    {{ json_string.text|safe }}
+
+    {% for item in json_string.task %}
+        <button class='step' id='{{ item.number }}'> Задание: {{ item.number }} </button> 
+    {% endfor %}
+
+    {% for question in json_string.task %}
+    <div style='display: none' class='Question' id='block_{{question.number}}'>
+        {{ question.q|safe }}
+        </br>
+        
+        <div id='work_{{question.number}}' class='Practice'>
+            <label for='input_1'>#</label>
+            <input type='text' id='input_1' class='line' style='border: 1'>
+        </br>
+        </div>
+        <button class='answer' id='{{question.number}}'> Ответить </button>
+    </div>
+    {% endfor %}
+
+    <script>
+        $(function(){
+            var tmp = "input_1";
+            $(".step").on("click", function(){
+
+                if (document.getElementById('block_'+this.id).style.display == 'none'){
+                    $('.Question').hide();
+                    $('#block_'+this.id).show();
+                }
+
+            });
+
+            $("#"+tmp).focus(function() {
+                tmp = "input_1";
+                console.log(tmp);
+              });
+
+            $(".line").keyup(function(event){
+                alert(this.id);
+                let elements = document.getElementsByClassName("Practice");
+                elements = document.getElementById(elements[0].id);
+                if(event.keyCode == 13){
+                    elements.insertAdjacentHTML("beforeend", `<label for='input'>#</label>
+                    <input type='text' id='input' style='border: 1'> </br>`);
+                }
+                if(event.keyCode == 8){
+                    alert(this.value.length);
+                    elements.insertAdjacentHTML("beforeend", `<label for='input'>#</label>
+                    <input type='text' id='input' class='line' style='border: 1'> </br>`);
+                }
+            });
+
+            
+        }); 
+    </script>
+{% endblock %}
