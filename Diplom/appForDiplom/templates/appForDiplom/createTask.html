@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Создание задания
+{% endblock %}
+
+
+{% block content %}
+    {% comment %} <div>
+        <select>
+            <option id='1'> Видео лекции </option>
+            <option id='2'> Лабораторная работа </option>
+            <option id='3'> Практическая работа </option>
+        </select>
+    </div> {% endcomment %}
+    <button id='button'> Создать вопрос </button>
+
+    <div id='CreateTask'>
+
+    </div>
+
+
+    <script>
+        $(function(){
+            var count = 1;
+            var buttons;
+            alert(buttons);
+            $('#button').click(function(){
+                //let answer = 1;
+                CreateTask.insertAdjacentHTML("beforeend", `<div class="questions" id='create_question_`+count+`'>
+                    <label for='question_`+count+`'> Введите вопрос </label>
+                    <input type="text" id='question_`+count+`'>
+                    <label for='right_answer_`+count+`'> Ответ: `+count+` </label>
+                    <input type="text" id='right_answer_`+count+`'>
+                    <label for='right_answer_`+count+`'> Ответ: `+count+` </label>
+                    <input type="text" id='right_answer_`+count+`'>
+                    <label for='right_answer_`+count+`'> Ответ: `+count+` </label>
+                    <input type="text" id='right_answer_`+count+`'>
+                    <div id='one_more'><button class="button_one_more" name='`+count+`'> Добавить вариант ответа </button></div>
+                </div>`);
+                buttons = document.getElementsByClassName("button_one_more");
+                count++;
+                alert(buttons.length);
+                document.addEventListener("DOMContentLoaded", ready);
+                //ОБНОВИТЬ ДОМ ДЕРЕВО ДЛЯ ДОБАВЛЕНИЯ ЭТИХ ЭЛЕМЕНТОВ ИЛИ ПРОГРУЗИТЬ ОПЯТЬ СКРИПТ!!!
+            });
+
+            alert(buttons.length);
+            for(let i = 0; i < buttons.length; i++){
+                if (i == 0) {alert('ksfjnsd');}
+                buttons[i].onclick = function (){
+                    alert(this.innerHTML);
+                }
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Лекции
+{% endblock %}
+
+{% comment %} {% block contentt %}
+    <div class="list-group">
+        <a href="/practice" class="list-group-item list-group-item-action"> Практическая работа </a>
+        <a href="/lection" class="list-group-item list-group-item-action"> Лекция </a>
+    </div>
+    
+{% endblock %} {% endcomment %}
+
+{% block sidebar%}
+<div class="list-group">
+    {% for item in json_string.video %}
+    <button class="videos nav-link active" style=" border-radius: 7px; background: white; border-color: blue;" aria-current="page" id='{{ item.name }}'> Видео: {{ item.name }} </button>
+    {% endfor %}
+
+    {% for item in json_string.task %}
+    <button href="" class='step nav-link active' style=" border-radius: 7px; background: white; border-color: blue;" aria-current="page" id='{{ item.number }}'> Задание: {{ item.number }} </button>
+    {% endfor %}
+</div>
+
+<br>
+
+{% endblock sidebar %}
+
+
+{% block content %}
+<div class="card mb-3">
+    
+    <div class="card-body">
+    {% for question in json_string.task %}
+        <div style='display: none; width: 70%; margin-left: 15%;' class='Question' id='block_{{question.number}}'>
+            {{ question.q }}
+            {% for option in question.var %}
+                <input type='radio' name='s_{{question.number}}' value={{ option }}> {{ option }}
+            {% endfor %}
+            <button class='answer' id='{{question.number}}'> Ответить </button>
+        </div>
+    {% endfor %}
+    
+    {% for video in json_string.video %}
+        <video name='demo' controls autoplay width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'>
+            <source src="json_string.video.src" type="video/mp4"></source>
+        </video>
+    {% endfor %}
+    </div>
+</div>
+<script>
+    //right_answer СПРЯТАТЬ!
+    var right_answer = ['2223','1703'];
+
+    $(function(){
+        $(".videos").on("click", function(){
+            $('.Question').hide();
+            if (document.getElementById('video_'+this.id).style.display == 'none'){
+                $('.video').hide();
+                $('#video_'+this.id).show();
+            }
+
+        });
+
+        $(".step").on("click", function(){
+            $('.video').hide();
+            if (document.getElementById('block_'+this.id).style.display == 'none'){
+                $('.Question').hide();
+                $('#block_'+this.id).show();
+            }
+
+        });
+
+        $(".answer").on("click", function(){
+            var rad=document.getElementsByName('s_'+this.id);
+            for (var i=0;i<rad.length; i++) {
+                if (rad[i].checked) {
+                    rad = rad[i].value;
+                }
+            }
+
+            if (rad == right_answer[this.id-1]){
+                alert('Вы правильно ответили на вопрос');
+                document.getElementById(this.id).style.background = 'green';
+            } else {
+                alert('Вы не правильно ответили на вопрос');
+                document.getElementById(this.id).style.background = 'red';
+            }
+        });
+    }); 
+</script>
+
+{% endblock %}

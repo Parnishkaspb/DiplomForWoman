@@ -10,11 +10,27 @@
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
   </head>
   <body>
+    {% comment %} style='background-color: #d9dbdd;' {% endcomment %}
 
-  
-    {% block content %}
-      Content
-    {% endblock content%}
+
+    <div class="container mt-3">
+      <div class="row">
+          <div class="col-md-3">
+              {% block sidebar %} Sidebar {% endblock %}
+          </div>
+          <div class="col-md-9">
+            {% comment %} {% block contentt %}
+            {% comment %} Content {% endcomment %}
+          {% comment %} {% endblock contentt %} {% endcomment %}
+        
+            {% block content %}
+              Content
+            {% endblock content%}
+          </div>
+
+      </div>
+    </div>
+    
 
   {% comment %} {% include 'inc/_nav.html' %} {% endcomment %}
 

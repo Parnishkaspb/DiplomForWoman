@@ -4,31 +4,38 @@
     Практические работы
 {% endblock %}
 
+{% block sidebar %}
+    <div class="list-group">
+        {% for item in json_string.task %}
+        <button class='step' id='{{ item.number }}'> Задание: {{ item.number }} </button> 
+        {% endfor %}
+    </div>
+{% endblock %}
 
 {% block content %}
-    {{ json_string.text|safe }}
-
-    {% for item in json_string.task %}
-        <button class='step' id='{{ item.number }}'> Задание: {{ item.number }} </button> 
-    {% endfor %}
-
-    {% for question in json_string.task %}
-    <div style='display: none' class='Question' id='block_{{question.number}}'>
-        {{ question.q|safe }}
-        </br>
-        
-        <div id='work_{{question.number}}' class='Practice'>
-            <label for='input_1'>#</label>
-            <input type='text' id='input_1' class='line' style='border: 1'>
-        </br>
+<div class="card mb-3">
+    
+    <div class="card-body">
+        {% for question in json_string.task %}
+        <div style='display: none' class='Question' id='block_{{question.number}}'>
+            <form method="post">
+            {{ question.q|safe }}
+            </br>
+            
+            <textarea style="width: 100%;" rows="9" id='work_{{question.number}}' class='Practice' name='first_practice'>
+            </textarea>
+            </br>
+            {% csrf_token %}
+            <button style="width: 60%; margin-left: 20%;" class='answer' id='{{question.number}}'> Ответить </button>
+            </form>
         </div>
-        <button class='answer' id='{{question.number}}'> Ответить </button>
+        {% endfor %}
     </div>
-    {% endfor %}
 
+</div>
     <script>
         $(function(){
-            var tmp = "input_1";
+
             $(".step").on("click", function(){
 
                 if (document.getElementById('block_'+this.id).style.display == 'none'){
@@ -38,26 +45,30 @@
 
             });
 
-            $("#"+tmp).focus(function() {
-                tmp = "input_1";
-                console.log(tmp);
-              });
+            $('.answer').on("click", function(e){
+                let text = $('#work_'+this.id).val();
 
-            $(".line").keyup(function(event){
-                alert(this.id);
-                let elements = document.getElementsByClassName("Practice");
-                elements = document.getElementById(elements[0].id);
-                if(event.keyCode == 13){
-                    elements.insertAdjacentHTML("beforeend", `<label for='input'>#</label>
-                    <input type='text' id='input' style='border: 1'> </br>`);
-                }
-                if(event.keyCode == 8){
-                    alert(this.value.length);
-                    elements.insertAdjacentHTML("beforeend", `<label for='input'>#</label>
-                    <input type='text' id='input' class='line' style='border: 1'> </br>`);
-                }
+                console.log(text);
+                text = text.split();
+                //console.log(text);
+                
+                $.ajax({
+                    data: text, // получаяем данные формы
+                    url: "http://127.0.0.1:8000/practice",
+                    // если успешно, то
+                    success: function (response) {
+                        alert('dsaasdsa');
+                        return false;
+                    },
+                    // если ошибка, то
+                    error: function (response) {
+                        // предупредим об ошибке
+                        console.log(response.responseJSON.errors)
+                    }
+                });
             });
 
+            
             
         }); 
     </script>
