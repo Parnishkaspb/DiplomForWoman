@@ -7,7 +7,7 @@
 
 {% block content %}
     {{ json_string.text|safe }}
-
+    
     {% for item in json_string.task %}
         <button class='step' id='{{ item.number }}'> Задание: {{ item.number }} </button> 
     {% endfor %}

@@ -15,11 +15,12 @@
 {% block sidebar%}
 <div class="list-group">
     {% for item in json_string.video %}
-    <button class="videos nav-link active" style=" border-radius: 7px; background: white; border-color: blue;" aria-current="page" id='{{ item.name }}'> Видео: {{ item.name }} </button>
+        {{item.scr}}
+    <button class="videos nav-link active" style=" border-radius: 7px; background: white; border-color: blue; margin-top: 10px;" aria-current="page" id='{{ item.name }}'> Видео: {{ item.name }} </button>
     {% endfor %}
 
     {% for item in json_string.task %}
-    <button href="" class='step nav-link active' style=" border-radius: 7px; background: white; border-color: blue;" aria-current="page" id='{{ item.number }}'> Задание: {{ item.number }} </button>
+    <button href="" class='step nav-link active' style=" border-radius: 7px; background: white; border-color: blue; margin-top: 10px;" aria-current="page" id='{{ item.number }}'> Задание: {{ item.number }} </button>
     {% endfor %}
 </div>
 
@@ -43,8 +44,10 @@
     {% endfor %}
     
     {% for video in json_string.video %}
-        <video name='demo' controls autoplay width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'>
-            <source src="json_string.video.src" type="video/mp4"></source>
+        
+        {% comment %} <video muted="muted" autoplay="autoplay"  loop src="/video/{{video.scr}}"  width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'> </video> {% endcomment %}
+        <video name='demo' muted autoplay= width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'>
+            <source src='{{video.scr}}' type="video/mp4"></source>
         </video>
     {% endfor %}
     </div>

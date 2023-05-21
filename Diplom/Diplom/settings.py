@@ -122,9 +122,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Diplom/static'),
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #Создание пути для сохранения каких-то файлов
+MEDIA_ROOT = os.path.join(BASE_DIR, 'video') #Создание пути для сохранения каких-то файлов
 # В данном случае фото <-- Куда загружать в какую папку
-MEDIA_URL = '/media/' #Для построения URL
+MEDIA_URL = '/video/' #Для построения URL
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

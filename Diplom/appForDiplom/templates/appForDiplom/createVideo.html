@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Создание задания
+{% endblock %}
+
+{% block sidebar %}
+    <div class="list-group">
+        <a href="/createTask" class="list-group-item list-group-item-action">Создать тестовое задание</a>
+    </div>
+    <p class='success'> {{success}} </p>
+{% endblock %}
+
+
+{% block content %}
+    <form action="/createVideo" method="post" enctype="multipart/form-data">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit" id='reg' class="btn btn-primary"> Загрузить видео </button>
+    </form>
+
+{% endblock %}
