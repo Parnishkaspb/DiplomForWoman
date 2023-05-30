@@ -187,8 +187,13 @@ def practice(request, id):
         f = open(prac.practice.path, 'r')
         fromView = request.POST['do']
         # print(fromView)
-        # ОТПРАВЛЯЕМ 2 ЗАПРОСА НА ТЕСТОВУЮ БД ПОЛУЧАЕМ РЕЗУЛЬТАТА И СРАВНИВАЕМ!
-        if fromView == f.read():
+        
+        # ПОМЕНЯТЬ НА СВОЙ ПУТЬ!!!!
+        connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')
+        cursor = connect.cursor()
+        your_select = cursor.execute(f.read()).fetchall()
+        teacher_select = cursor.execute(fromView).fetchall()        
+        if your_select == teacher_select:
             context['success'] = 'Поздравляем! Вы сдали данную практику'
             return render(request, 'appForDiplom/prac.html', context=context)
         else:
