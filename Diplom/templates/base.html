@@ -1,50 +1,270 @@
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}  {% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" >
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" >
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-  </head>
-  <body>
-    {% comment %} style='background-color: #d9dbdd;' {% endcomment %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>{% block title %}  {% endblock %}</title>
+        <link rel="shortcut icon" href="{% static '/images/favicon.ico' %}" type="image/x-icon" />
 
+        <link rel="stylesheet" href="{% static '/css/app.561392ec.css' %}" />
+        <link rel="stylesheet" href="{% static '/css/scssStyle.9a40ed43.css' %}" />
+        <link rel="stylesheet" href="{% static '/css/newStyle.b84f9fbd.css' %}" />
 
-    <div class="container mt-3">
-      <div class="row">
-          <div class="col-md-3">
-              {% block sidebar %} Sidebar {% endblock %}
-          </div>
-          <div class="col-md-9">
-            {% comment %} {% block contentt %}
-            {% comment %} Content {% endcomment %}
-          {% comment %} {% endblock contentt %} {% endcomment %}
-        
-            {% block content %}
-              Content
-            {% endblock content%}
-          </div>
+        <script src="{% static '/js/runtime.909d0688.js' %}"></script>
+        <script src="{% static '/js/755.6752b871.js' %}"></script>
+        <script src="{% static '/js/139.76ae238b.js' %}"></script>
+        <script src="{% static '/js/257.3c35f135.js' %}"></script>
+        <script src="{% static '/js/952.4052ba22.js' %}"></script>
+        <script src="{% static '/js/171.861942ea.js' %}"></script>
+        <script src="{% static '/js/app.85e5ecfc.js' %}"></script>
+        <script src="{% static '/js/waves.847c687a.js' %}"></script>
+    </head>
 
-      </div>
-    </div>
-    
-
-  {% comment %} {% include 'inc/_nav.html' %} {% endcomment %}
-
-    {% comment %} <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-3">
-                {% block sidebar %} Sidebar {% endblock %}
+    <body class="theme__blue">
+        <header>
+        <nav class="navbar navbar-expand-md p-0 fixed-top">
+            <button
+            id="menu-burger"
+            type="button"
+            class="header-link header-link-transform d-mobile-none ms-2"
+            data-bs-toggle="collapse"
+            data-bs-target="#sidebar"
+            aria-expanded="true"
+            aria-controls="menu"
+            >
+            <i class="fa fa-bars suai-hover-theme"></i>
+            </button>
+            <div
+            class="me-auto d-flex justify-content-center align-items-center ms-3 ms-lg-0"
+            >
+            <a class="navbar-brand desktop-center" href="/">
+                <img
+                src="{% static '/images/logo.svg' %}"
+                width="90px"
+                alt="ГУАП"
+                />
+            </a>
             </div>
-            <div class="col-md-9">
-                {% block content %} Content {% endblock %}
-            </div>
 
+            <div class="navbar-right">
+            <ul class="nav no-borders">
+                <li class="nav-item">
+                <a href="/inside/edit/profile">
+                    <i class="pe-7s-pen"></i>
+                </a>
+                </li>
+                <li class="nav-item">
+                <a href="/logout">
+                    <i class="pe-7s-upload pe-rotate-90"></i>
+                </a>
+                </li>
+            </ul>
+            </div>
+        </nav>
+        </header>
+        <menu
+        class="d-lg-none sidebar sidebar__mobile offcanvas-lg offcanvas-start"
+        id="sidebar-mobile"
+        aria-labelledby="sidebar"
+        >
+        <div class="offcanvas-header">
+            <a class="navbar-brand" href="/"
+            ><img src="{% static '/images/logo.svg' %}" width="90px" alt="ГУАП"
+            /></a>
+            <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            data-bs-target="#sidebar-mobile"
+            aria-label="Закрыть"
+            ></button>
         </div>
-    </div> {% endcomment %}
-    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
-  </body>
+        <div class="offcanvas-body p-0">
+            <ul class="sidebar__menu nav flex-column">
+            <li>
+                <a href="/inside/profile"> Профиль </a>
+            </li>
+            <li>
+                <a href="/inside/students/subjects"> Дисциплины </a>
+            </li>
+            <li>
+                <a href="/inside/student/tasks"> Задания </a>
+            </li>
+            <li>
+                <a href="/inside/student/materials"> Материалы </a>
+            </li>
+            <li>
+                <a href="https://lms.guap.ru/new/course/view.php?id=8505">
+                Олимпиады
+                </a>
+            </li>
+            <li>
+                <a href="/inside/student/reports"> Отчеты </a>
+            </li>
+            <li>
+                <a href="/inside/references"> Справки </a>
+            </li>
+            <li>
+                <a href="/inside/publications"> Публикации </a>
+            </li>
+            <li>
+                <a href="/inside/library"> Библиотека </a>
+            </li>
+            <li>
+                <a href="https://lms.guap.ru/new/course/view.php?id=1"> LMS </a>
+            </li>
+            <li>
+                <a href="/inside/student/notice"> Объявления </a>
+            </li>
+            <li>
+                <a href="/inside/evaluation/subjects"> Оценки дисциплин </a>
+            </li>
+            <li>
+                <a href="/professors"> Сотрудники </a>
+            </li>
+            <li>
+                <a href="/help"> Помощь </a>
+            </li>
+            <li>
+                <a href="/inside/feedback"> Обратная связь </a>
+            </li>
+            </ul>
+        </div>
+        <div class="sidebar__footer text-center p-2 text-nowrap">
+            <span class="small fw-light">Личный кабинет</span>
+            <div class="small fw-semibold">УЦР ГУАП 2023</div>
+        </div>
+        </menu>
+
+        <div class="page__content container-fluid">
+            <div class="row flex-nowrap overflow-hidden position-relative">
+                <menu class="d-mobile-none sidebar col-auto px-0 collapse collapse-horizontal show" id="sidebar" >
+                    <nav class="sidebar__navigation shadow-sm mb-3">
+                        <div class="profile-picture">
+                        <div class="profile-picture__photo profile_image_sm profile_image_wrap ou outline-success">
+                            <a href="/inside/profile">
+                            <img
+                                alt="logo"
+                                class="profile_image"
+                                src="{% static '/images/no_image.jpg' %}"
+                            />
+                            </a>
+                        </div>
+                        <div class="profile-picture__desc">
+                            <span class="d-block w-100 text-center"
+                            >Короткова Анастасия Денисовна</span
+                            >
+                        </div>
+                        </div>
+                    </nav>
+                    <nav class="sidebar__navigation shadow-sm">
+                        <ul class="sidebar__menu nav flex-column">
+                        <li>
+                            <a href="/inside/profile"> Профиль </a>
+                        </li>
+                        <li>
+                            <a href="/inside/students/subjects"> Дисциплины </a>
+                        </li>
+                        <li>
+                            <a href="/inside/student/tasks"> Задания </a>
+                        </li>
+                        <li>
+                            <a href="/inside/student/materials"> Материалы </a>
+                        </li>
+                        <li>
+                            <a href="https://lms.guap.ru/new/course/view.php?id=8505">
+                            Олимпиады
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/inside/student/reports"> Отчеты </a>
+                        </li>
+                        <li>
+                            <a href="/inside/references"> Справки </a>
+                        </li>
+                        <li>
+                            <a href="/inside/publications"> Публикации </a>
+                        </li>
+                        <li>
+                            <a href="/inside/library"> Библиотека </a>
+                        </li>
+                        <li>
+                            <a href="https://lms.guap.ru/new/course/view.php?id=1"> LMS </a>
+                        </li>
+                        <li>
+                            <a href="/inside/student/notice"> Объявления </a>
+                        </li>
+                        <li>
+                            <a href="/inside/evaluation/subjects"> Оценки дисциплин </a>
+                        </li>
+                        <li>
+                            <a href="/professors"> Сотрудники </a>
+                        </li>
+                        <li>
+                            <a href="/help"> Помощь </a>
+                        </li>
+                        <li>
+                            <a href="/inside/feedback"> Обратная связь </a>
+                        </li>
+                        </ul>
+                    </nav>
+                    <div class="sidebar__footer text-center p-2 text-nowrap">
+                        <span class="small fw-light">Личный кабинет</span>
+                        <div class="small fw-semibold">УЦР ГУАП 2023</div>
+                    </div>
+                </menu>
+                <div id="wrapper" class="col flex-shrink-1 p-0">
+                <div class="container-fluid p-3">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="fixed-bottom bg-white shadow-lg mobile-menu">
+        <a
+            class="mobile-menu__item"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebar-mobile"
+            aria-expanded="false"
+        >
+            <i class="fa fa-bars suai-hover-theme"></i>
+        </a>
+        <a href="/inside/student/tasks/" class="mobile-menu__item">
+            <i class="fa-regular fa-paste"></i>
+        </a>
+        <a
+            href="https://lms.guap.ru/new/course/view.php?id=1"
+            class="mobile-menu__item"
+        >
+            <span>LMS</span>
+        </a>
+        <a href="/inside/profile" class="mobile-menu__item">
+            <i class="fa-regular fa-user"></i>
+        </a>
+        </footer>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let $element = $(
+            '.sidebar a[href="/inside/student/reports/106174/create"]'
+            );
+            let $element_mobile = $(
+            '.mobile-menu a[href="/inside/student/reports/106174/create"]'
+            );
+
+            $element.addClass("_active");
+            $element_mobile.addClass("_active");
+
+            let $item = $element.parents("li:has(.sub-menu)");
+            if ($item.length) {
+            $item.children(".sub-menu").attr("aria-expanded", "true");
+            $item.children(".collapse").addClass("show");
+            }
+        });
+        </script>
+    </body>
 </html>

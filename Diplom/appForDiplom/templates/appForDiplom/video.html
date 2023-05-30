@@ -1,39 +1,107 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Лекции
+    Лекций
 {% endblock %}
 
-{% comment %} {% block contentt %}
-    <div class="list-group">
-        <a href="/practice" class="list-group-item list-group-item-action"> Практическая работа </a>
-        <a href="/lection" class="list-group-item list-group-item-action"> Лекция </a>
-    </div>
-    
-{% endblock %} {% endcomment %}
+{% block content %}
+<div class="container-fluid p-3">
+    <div class="breadcrumb__container">
+            <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a href="/" itemprop="item">
+                        <span itemprop="name">На главную страницу</span>
+                    </a>
+                </li>
+            </ol>
+        </div>
 
-{% block sidebar%}
-<div class="list-group">
-    {% for item in json_string.video %}
-        {{item.scr}}
-    <button class="videos nav-link active" style=" border-radius: 7px; background: white; border-color: blue; margin-top: 10px;" aria-current="page" id='{{ item.name }}'> Видео: {{ item.name }} </button>
-    {% endfor %}
+<h3 class="page__title">Лекция "{{name}}"</h3>
 
-    {% for item in json_string.task %}
-    <button href="" class='step nav-link active' style=" border-radius: 7px; background: white; border-color: blue; margin-top: 10px;" aria-current="page" id='{{ item.number }}'> Задание: {{ item.number }} </button>
-    {% endfor %}
+
+<div class="row">
+<div class="col-lg-6">
+<div class="card shadow-sm">
+<div class="card-body list-group p-0">
+<div class="list-group-item">
+<h5>Дисциплина:
+    <span class="fw-light lh-base text-decoration-underline">
+        <a href="/inside/students/subjects/2366709">
+            Базы данных
+        </a>
+    </span>
+</h5>
+</div>
+<div class="list-group-item">
+<h5>Тип: <span class="fw-light lh-base">{{type}}</span>
+</h5>
+</div>
+<div class="list-group-item">
+<h5>Семестр:
+    <span class="fw-light lh-base">2022/2023 весенний</span>
+</h5>
+</div>
+<div class="list-group-item">
+<h5>Преподаватель:
+    <span class="fw-light lh-base">
+        <a class="link-switch link-switch-blue"
+           href="/inside/profile/201">
+                Галанина Валентина Александровна
+        </a>
+    </span>
+</h5>
+</div>
+                             
+
+                    <div class="list-group-item">
+    <h5>Дата добавления:
+        <span class="fw-light lh-base">{{date_create}}</span>
+    </h5>
 </div>
 
-<br>
+               
 
-{% endblock sidebar %}
+                    <div class="list-group-item">
+    <h5><span class="task-view-links-text">Доп. материалы: </span>
+        
+                                            <a class="btn btn-sm btn-outline-secondary" target="_blank"
+               href="/inside/student/tasks/f5bd8ee8566dcdbd6d866719082b070e/download">
+                <i class="fa fa-download fs-5"></i>
+            </a>
+                                    </h5>
+</div>
+            </div>
+</div>
+</div>
+</div>
 
+<h4 class="page__title">Лекция "{{name}}"</h4>
+<div class="mb-2">
 
-{% block content %}
-<div class="card mb-3">
+</div>
+<div class="row">
+<div class="col-lg-12">
+<div class="card shadow-sm">
+<div class="card-body">
+<div class="table-responsive">
     
-    <div class="card-body">
-    {% for question in json_string.task %}
+    <video style='margin-left: 25%;' width="50%" height="360" controls>
+        <source src="{{ video_url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+{% comment %} <div class="card mb-3">
+    
+    <div class="card-body"> {% endcomment %}
+    {% comment %} {% for question in json_string.task %}
         <div style='display: none; width: 70%; margin-left: 15%;' class='Question' id='block_{{question.number}}'>
             {{ question.q }}
             {% for option in question.var %}
@@ -41,18 +109,18 @@
             {% endfor %}
             <button class='answer' id='{{question.number}}'> Ответить </button>
         </div>
-    {% endfor %}
+    {% endfor %} {% endcomment %}
     
-    {% for video in json_string.video %}
+    {% comment %} {% for video in json_string.video %} {% endcomment %}
         
         {% comment %} <video muted="muted" autoplay="autoplay"  loop src="/video/{{video.scr}}"  width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'> </video> {% endcomment %}
-        <video name='demo' muted autoplay= width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'>
+        {% comment %} <video name='demo' muted autoplay= width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'>
             <source src='{{video.scr}}' type="video/mp4"></source>
-        </video>
-    {% endfor %}
-    </div>
-</div>
-<script>
+        </video> {% endcomment %}
+    {% comment %} {% endfor %} {% endcomment %}
+    {% comment %} </div>
+</div> {% endcomment %}
+{% comment %} <script>
     //right_answer СПРЯТАТЬ!
     var right_answer = ['2223','1703'];
 
@@ -92,6 +160,6 @@
             }
         });
     }); 
-</script>
+</script> {% endcomment %}
 
 {% endblock %}

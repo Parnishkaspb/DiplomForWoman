@@ -1,26 +1,52 @@
 from django import forms
-from .models import Videos
+from .models import Videos, Practice
 
-class VideoForm(forms.ModelForm):
+class VideoForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea(attrs={
+        "id": 'comment',
+        "name": 'comment',
+        "class": 'form-control form-control-sm',
+    }))
+    file = forms.FileField()
+
+class PracticeForm(forms.ModelForm):
     class Meta:
-        model = Videos
-        fields = ['title', 'content', 'video']
+        model = Practice
+        fields = ['title', 'content', 'number', 'practice']
         widgets = {
-            'title': forms.TextInput(attrs={ 
-                "id": 'title',
-                "class": 'form-control',
-                'required': True,
-                "placeholder": 'Введите наименование задания'
-            }),
-            'content': forms.Textarea(attrs={ 
+            'title': forms.TextInput(attrs={
+                "id": 'comment',
+                "name": 'comment',
+                'class': 'form-control'
+                }),
+            'content': forms.Textarea(attrs={
                 "id": 'content',
-                "class": 'form-control',
-                "placeholder": 'Введите дополнительный материал'
-            }),
-            # 'video': forms.FileField(),
+                "name": 'comment',
+                'class': 'form-control'
+                }),
+            'number': forms.NumberInput(attrs={
+                'id': 'number',
+                'min': 5,
+                'max': 10,
+                'class': 'form-control'
+                })
         }
 
+class DoPracticeForm(forms.Form):
+    do = forms.CharField(label='Поле для практики', widget=forms.Textarea(attrs={
+        "id": 'do',
+        "class": 'form-control',
+        'required': True,
+        'rows': 25, 
+        'cols': 10,
+    }))
+
 class TaskForm(forms.Form):
+    choise = forms.ChoiceField(choices=[], label='Выбор вопроса', required=True, widget=forms.Select(attrs={
+        'class': 'form-control',
+        "id": 'choise'
+        }))
+
     title = forms.CharField(max_length=30, required=True, label='Вопрос', widget=forms.TextInput(attrs={
         "id": 'title',
         "class": 'form-control',

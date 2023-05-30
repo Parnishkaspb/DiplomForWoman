@@ -1,75 +1,116 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Практические работы
+    Практическая работа
 {% endblock %}
 
-{% block sidebar %}
-    <div class="list-group">
-        {% for item in json_string.task %}
-        <button class='step' id='{{ item.number }}'> Задание: {{ item.number }} </button> 
-        {% endfor %}
-    </div>
-{% endblock %}
 
 {% block content %}
-<div class="card mb-3">
-    
-    <div class="card-body">
-        {% for question in json_string.task %}
-        <div style='display: none' class='Question' id='block_{{question.number}}'>
-            <form method="post">
-            {{ question.q|safe }}
-            </br>
-            
-            <textarea style="width: 100%;" rows="9" id='work_{{question.number}}' class='Practice' name='first_practice'>
-            </textarea>
-            </br>
-            {% csrf_token %}
-            <button style="width: 60%; margin-left: 20%;" class='answer' id='{{question.number}}'> Ответить </button>
-            </form>
-        </div>
-        {% endfor %}
+<div class="container-fluid p-3">
+    <div class="breadcrumb__container">
+        <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="/inside/student/tasks/" itemprop="item">
+                    <span itemprop="name">Список заданий</span>
+                </a>
+                <meta itemprop="position" content="1"/>
+            </li>
+            <span class='separator'> /</span>
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <span itemprop="name">Текущее задание</span>
+                <meta itemprop="item" content="/inside/student/tasks/98772"/>
+                <meta itemprop="position" content="2"/>
+            </li>
+        </ol>
     </div>
 
+    <h3 class="page__title">Практическая работа "{{title}}" </h3>
+    {% if success == 'Поздравляем! Вы сдали данную практику' %}
+        <h5 class='warning mb-3' style='color: green'> {{success}} </h5>
+    {% else %}
+        <h5 class='warning mb-3' style='color: red'> {{success}} </h5>
+    {% endif %}
+   
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body list-group p-0">
+                    <div class="list-group-item">
+                        <h5>Дисциплина:
+                            <span class="fw-light lh-base text-decoration-underline">
+                                <a href="/inside/students/subjects/2366709">
+                                    Базы данных
+                                </a>
+                            </span>
+                        </h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Тип: <span class="fw-light lh-base">Практическое задание</span></h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Семестр:
+                            <span class="fw-light lh-base">2021/2022 весенний</span>
+                        </h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Преподаватель:
+                            <span class="fw-light lh-base">
+                                <a class="link-switch link-switch-blue" href="/inside/profile/201"> Галанина Валентина Александровна </a>
+                            </span>
+                        </h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Баллы: <span class="fw-light lh-base">{{number}}</span></h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>№ задания: <span class="fw-light lh-base">1</span></h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Дата добавления:
+                            <span class="fw-light lh-base"></span>
+                        </h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Предельная дата выполнения:
+                            <span class="fw-light lh-base m-r-xs"></span>
+                        </h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5><span class="task-view-links-text">Доп. материалы: </span>
+                            <a class="btn btn-sm btn-outline-secondary" target="_blank" href="/inside/student/tasks/f5bd8ee8566dcdbd6d866719082b070e/download">
+                                <i class="fa fa-download fs-5"></i>
+                            </a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-2">Описание задания</h5>
+                {{ text|safe }}
+                {% comment %} <p class="task-description-block">Создать таблицу</p> {% endcomment %}
+            </div>
+        </div>
+    </div>
 </div>
-    <script>
-        $(function(){
-
-            $(".step").on("click", function(){
-
-                if (document.getElementById('block_'+this.id).style.display == 'none'){
-                    $('.Question').hide();
-                    $('#block_'+this.id).show();
-                }
-
-            });
-
-            $('.answer').on("click", function(e){
-                let text = $('#work_'+this.id).val();
-
-                console.log(text);
-                text = text.split();
-                //console.log(text);
-                
-                $.ajax({
-                    data: text, // получаяем данные формы
-                    url: "http://127.0.0.1:8000/practice",
-                    // если успешно, то
-                    success: function (response) {
-                        alert('dsaasdsa');
-                        return false;
-                    },
-                    // если ошибка, то
-                    error: function (response) {
-                        // предупредим об ошибке
-                        console.log(response.responseJSON.errors)
-                    }
-                });
-            });
-
-            
-            
-        }); 
-    </script>
+<h4 class="page__title">Выполнение</h4>
+<div class="row">
+    <div class="col-lg-9">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <form action="/practice/{{id}}/" method="post">
+                        {% csrf_token %}
+                        {{form}}
+                        <button type="submit" id='reg' class="btn btn-primary mt-2"> Отправить на проверку </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

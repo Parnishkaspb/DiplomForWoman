@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .forms import *
 from .db import create_connection
 import json
+from .models import *
 # Create your views here.
 
 # def index(request):
@@ -19,55 +20,102 @@ import json
 # def navigations():
 #     return render(request, 'appForDiplom/createTask.html')
 
+def createPractice(request):
+    if request.method == "POST":
+        form = PracticeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
 
+            return render(request, 'appForDiplom/createPractice.html', {'form': form, 'success': 'Вы успешно добавили практику. Можете загрузить еще одно'})
+    else:
+        form = PracticeForm()
+    return render(request, 'appForDiplom/createPractice.html', {'form': form})
 
 
 def index(request):
-    # if request.POST 
-    # return render(request, 'appForDiplom/tes.html')
-    return render(request, 'appForDiplom/start.html')
+    video = Videos.objects.all()
+    test = Test_Question.objects.filter(id_T=1).values('id_Q')
+    prac = Practice.objects.all()
+    # print(test)
+    massive_video = []
+    massive_test = []
+    massive_practice = []
+    number = 1
+    for v in video:
+        massive_video.append({'number': number, 'pk': v.pk})
+        number += 1
 
-
-
-def handle_uploaded_file(f):  
-    string = 'Diplom/video'+f.name
-    with open(string, 'wb+') as destination:  
-        for chunk in f.chunks():
-            destination.write(chunk)
-    return string
+    number = 1
+    for v in test:
+        massive_test.append({'number': number, 'pk': v['id_Q']})
+        number += 1
+    
+    num = 1
+    for v in prac:
+        massive_practice.append({'number': num, 'pk': v.pk, 'max': v.number})
+        num += 1
+    # print(massive_test)
+    # print(massive_practice)
+    context = {
+        'videos': massive_video,
+        'test': massive_test,
+        'practice': massive_practice,
+    }
+    return render(request, 'appForDiplom/headPage.html', context=context)
 
 
 def createVideo(request):
     if request.method == "POST":
-        # print(request.FILES)
         form = VideoForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            form = VideoForm()
+            form = form.cleaned_data
+            video = Videos()
+            video.title = form['comment']
+            video.content = form['comment']
+            video.video = form['file']
+            video.save()
+
             return render(request, 'appForDiplom/createVideo.html', {'form': form, 'success': 'Вы успешно добавили видео. Можете загрузить еще одно'})
     else:
         form = VideoForm()
     return render(request, 'appForDiplom/createVideo.html', {'form': form})
 
 def createTask(request):
+    teacher_lesson = Teacher_Lessons.objects.get(teacher_id = 1, lesson_id = 1)
+    id_test = Teacher_Lessons_Test.objects.filter(id_TL = teacher_lesson.id)
+    # ИСПРАВИТЬ ТЕСТЫ!!!
+    for i in id_test:
+        print(i)
+    # id_T = Test.objects.filter(pk= id_test.id_test).values('pk','title')
+    # choise = []
+    # for test in id_T:
+    #     choise.append((test['pk'], test['title']))
+    choise = []
+    print(choise)
     if request.method == "POST":
-        # print(request.FILES)
         form = TaskForm(request.POST)
+        print(form)
         if form.is_valid():
             form = form.cleaned_data
-            answer = f"'{form['answer_1']}','{form['answer_2']}','{form['answer_3']}','{form['answer_4']}'"
-            connect = create_connection("/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3")
-            cursor = connect.cursor()
-            title = form['title']
-            correct_answer = form['correct_answer']
-            sqlInsertInto = f'INSERT INTO AppForDiplom_question (q,a,r_a) VALUES ("{title}", "{answer}", "{correct_answer}")'
-            print(sqlInsertInto)
-            cursor.execute(sqlInsertInto)
-            connect.commit()
+            test_id = form['choise']
+
+            new_Question = Question()
+            new_Question.q = form['title']
+            new_Question.a = f"'{form['answer_1']}','{form['answer_2']}','{form['answer_3']}','{form['answer_4']}'"
+            new_Question.r_a = form['correct_answer']
+            id_new_question = new_Question.save()
+            new_Test = Test_Question()
+            new_Test.id_T = test_id
+            new_Test.id_Q = id_new_question
+            new_Test.save()
+
             form = TaskForm()
+            form.fields['choise'].choices = choise
             return render(request, 'appForDiplom/createTask.html', {'form': form, 'success': 'Вы успешно добавили тест. Можете создать еще один'})
+
     else:
         form = TaskForm()
+        form.fields['choise'].choices = choise
     return render(request, 'appForDiplom/createTask.html', {'form': form})
 
 
@@ -78,104 +126,84 @@ def createTask(request):
 def laba(request):
     connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')
     cursor = connect.cursor()
-    task = cursor.execute('SELECT * FROM AppForDiplom_question').fetchall()
-    video = cursor.execute('SELECT * FROM AppForDiplom_videos').fetchall()
-
-    json_string = {
-        'task': [],
-        'video': [],
-    }
-    # sss['task'] = {}
-    number = 0
-    # json_string['task'][number]
-    for i in task:
-        txt = i[2]
-        txt = txt.split(',')
-        s = {
-            'number': number + 1,
-            'q': i[1],
-            'var': txt,
-            'answer': i[3]
-        }
-        json_string['task'].append(s)
-        number = number + 1
-        # print(i[1])
-    # print('sdfsd')
-    number = 0
-    # print(video)
-    for i in video:
-        s = {
-            'name': number + 1,
-            'scr': i[4],
-        }
-        json_string['video'].append(s)
-        number = number + 1
-
-    return render(request, 'appForDiplom/lab.html', {'json_string': json_string})
-
-def practice(request):
-    json_string = {
-        "text":"<h1> Добро пожаловать </h1>", 
-        "task": [
-            {
-                'number': '1',
-                'q':'Создать таблицу под названием <strong>DB</strong> следующей структуры: <table border="1" cellpadding="1" cellspacing="1"><tr><td>Поле</td><td>Тип, описание</td></tr><tr><td><strong>ID</strong></td><td>INT PRIMARY KEY AUTO_INCREMENT</td></tr></table>'
-            }
-        ]
-    }
-
-    if request.method == "POST":
-        f = open('first_practice.txt', 'r')
-        fromView = request.POST['first_practice']
-        if f.read() == fromView:
-            print('All good')
-            return render(request, 'appForDiplom/good.html')
-        else:
-            return render(request, 'appForDiplom/prac.html', {'json_string': json_string}) # СЮДА ДОБАВИТЬ ДАННЫЕ ИЗ TEXTAREA ЧТОБЫ ЧЕЛОВЕК НЕ ПЕРЕВВОДИЛ ДАННЫЕ!!!!!
+    # task = cursor.execute('SELECT * FROM AppForDiplom_question').fetchall()
+    video = cursor.execute('SELECT id, title FROM AppForDiplom_videos').fetchall()
+    video1 = cursor.execute('SELECT title, id FROM AppForDiplom_videos').fetchall()
     
-    return render(request, 'appForDiplom/prac.html', {'json_string': json_string})
+    if video == video1:
+        print('FSDFNDKSJFNDSKFNSD')
+    else:
+        print('sadkajsndjasndkajs')
+    # "SELECT id, name FROM Student"
+    # |1|adsdasdsadas| -> json_massive
+    # "SELECT name, id FROM Student"
+    # |adsdasdsadas|1| -> json_massive
+    # json_string = {
+    #     'task': [],
+    #     'video': [],
+    # }
+    # # sss['task'] = {}
+    # number = 0
+    # # json_string['task'][number]
+    # for i in task:
+    #     txt = i[2]
+    #     txt = txt.split(',')
+    #     s = {
+    #         'number': number + 1,
+    #         'q': i[1],
+    #         'var': txt,
+    #         'answer': i[3]
+    #     }
+    #     json_string['task'].append(s)
+    #     number = number + 1
+    #     # print(i[1])
+    # # print('sdfsd')
+    # number = 0
+    # # print(video)
+    # for i in video:
+    #     s = {
+    #         'name': number + 1,
+    #         'scr': i[4],
+    #     }
+    #     json_string['video'].append(s)
+    #     number = number + 1
 
-def lection(request):
-    connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')
-    cursor = connect.cursor()
-    video = cursor.execute('SELECT * FROM AppForDiplom_videos').fetchall()
-    task = cursor.execute('SELECT * FROM AppForDiplom_question').fetchall()
-    print(video)
-    print(task)
-    connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')
-    cursor = connect.cursor()
-    task = cursor.execute('SELECT * FROM AppForDiplom_question').fetchall()
-    video = cursor.execute('SELECT * FROM AppForDiplom_videos').fetchall()
+    # return render(request, 'appForDiplom/lab.html', {'json_string': json_string})
 
-    json_string = {
-        'task': [],
-        'video': [],
+def practice(request, id):
+    prac = Practice.objects.get(pk = id)
+    
+    form = DoPracticeForm()
+    context = {
+        "title": prac.title, 
+        "text": prac.content,
+        "number": prac.number,
+        'id': id,
+        'form': form,
+        'success': '',
     }
-    # sss['task'] = {}
-    number = 0
-    # json_string['task'][number]
-    for i in task:
-        txt = i[2]
-        txt = txt.split(',')
-        s = {
-            'number': number + 1,
-            'q': i[1],
-            'var': txt,
-            'answer': i[3]
-        }
-        json_string['task'].append(s)
-        number = number + 1
-        # print(i[1])
-    # print('sdfsd')
-    number = 0
-    # print(video)
-    for i in video:
-        s = {
-            'name': number + 1,
-            'scr': i[4],
-        }
-        json_string['video'].append(s)
-        number = number + 1
-        
+    
+    if request.method == "POST":
+        f = open(prac.practice.path, 'r')
+        fromView = request.POST['do']
+        # print(fromView)
+        # ОТПРАВЛЯЕМ 2 ЗАПРОСА НА ТЕСТОВУЮ БД ПОЛУЧАЕМ РЕЗУЛЬТАТА И СРАВНИВАЕМ!
+        if fromView == f.read():
+            context['success'] = 'Поздравляем! Вы сдали данную практику'
+            return render(request, 'appForDiplom/prac.html', context=context)
+        else:
+            context['success'] = 'Попытайтесь еще раз!'
+            context['form'] = DoPracticeForm(initial={'do': fromView})
+            return render(request, 'appForDiplom/prac.html', context=context)
+    
+    return render(request, 'appForDiplom/prac.html', context=context)
 
-    return render(request, 'appForDiplom/video.html', {'json_string': json_string})
+def lection(request, id):
+    video = Videos.objects.get(pk=id)
+    context = {
+        'type': 'Видео материал',
+        'name': video.title,
+        'video_url': video.video,
+        'date_create': video.created_at
+    }
+    return render(request, 'appForDiplom/video.html', context=context)

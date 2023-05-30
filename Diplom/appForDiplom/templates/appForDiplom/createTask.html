@@ -1,21 +1,117 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Создание задания
-{% endblock %}
-
-{% block sidebar %}
-    <div class="list-group">
-        <a href="/createVideo" class="list-group-item list-group-item-action">Загрузить видео урок</a>
-    </div>
-    <p class='success'> {{success}} </p>
+    Добавление теста
 {% endblock %}
 
 {% block content %}
-    <form action="/createTask" method="post" enctype="multipart/form-data">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit" id='reg' class="btn btn-primary"> Сформировать вопрос </button>
-    </form>
+<div class="breadcrumb__container">
+    <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList" >
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/createVideo" itemprop="item">
+                <span itemprop="name">Добавить видео</span>
+            </a>
+            <meta itemprop="position" content="1" />
+        </li>
+        <span class="separator"> / </span>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/createPractice" itemprop="item">
+                <span itemprop="name">Добавить практическое задание</span>
+            </a>
+            <meta itemprop="position" content="2" />
+        </li>
+        <span class="separator"> / </span>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" >
+            <span itemprop="name">Добавить тест</span>
+            <meta itemprop="item" content="/inside/student/reports/106174/create"/>
+            <meta itemprop="position" content="3" />
+        </li>
+    </ol>
+</div>
+
+<h3 class="page__title">Создание теста</h3>
+{% comment %} <p class="text-success "><span></span></p> {% endcomment %}
+<p class='success ms-1 mb-2'> {{success}} </p>
+
+<div class="row">
+<div class="col-lg-6">
+<div class="card shadow-sm">
+    <div class="card-body list-group p-0">
+        <div class="list-group-item">
+            <h5>Дисциплина:
+                <span class="fw-light lh-base text-decoration-underline">
+                    <a href="/inside/students/subjects/2366709">
+                        Базы данных
+                    </a>
+                </span>
+            </h5>
+        </div>
+        <div class="list-group-item">
+            <h5>Тип: <span class="fw-light lh-base">Тест</span>
+            </h5>
+        </div>
+        <div class="list-group-item">
+            <h5>Семестр:
+                <span class="fw-light lh-base">2022/2023 весенний</span>
+            </h5>
+        </div>
+        <div class="list-group-item">
+            <h5>Преподаватель:
+                <span class="fw-light lh-base">
+                    <a class="link-switch link-switch-blue"
+                       href="/inside/profile/201">
+                            Галанина Валентина Александровна
+                    </a>
+                </span>
+            </h5>
+        </div>
+                                         
+                                <div class="list-group-item">
+                <h5>№ задания: <span class="fw-light lh-base">1</span></h5>
+            </div>
+        
+                                <div class="list-group-item">
+                <h5>Дата добавления:
+                    <span class="fw-light lh-base"></span>
+                </h5>
+            </div>
+        
+                           
+        
+                                <div class="list-group-item">
+                <h5><span class="task-view-links-text">Доп. материалы: </span>
+                    
+                                                        <a class="btn btn-sm btn-outline-secondary" target="_blank"
+                           href="/inside/student/tasks/f5bd8ee8566dcdbd6d866719082b070e/download">
+                            <i class="fa fa-download fs-5"></i>
+                        </a>
+                                                </h5>
+            </div>
+                        </div>
+</div>
+</div>
+</div>
+
+<h4 class="page__title">Создание теста</h4>
+<div class="mb-2">
+
+        </div>
+<div class="row">
+<div class="col-lg-12">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                
+                <form action="/createTask" method="post">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <button type="submit" id='reg' class="btn btn-primary"> Сформировать вопрос </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
 {% endblock %}

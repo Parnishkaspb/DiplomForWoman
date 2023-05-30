@@ -1,0 +1,274 @@
+{% extends 'base.html' %} 
+{% block title %} Страница предмета 
+{% endblock title %} 
+{% block content %}
+<div class="container-fluid p-3">
+  <div class="breadcrumb__container">
+    <ol
+      id="wo-breadcrumbs"
+      class="breadcrumb"
+      itemscope
+      itemtype="http://schema.org/BreadcrumbList"
+    >
+      <li
+        itemprop="itemListElement"
+        itemscope
+        itemtype="http://schema.org/ListItem"
+      >
+        <a href="/inside/students/subjects" itemprop="item"
+          ><span itemprop="name">Список дисциплин</span></a
+        ><meta itemprop="position" content="1" />
+      </li>
+      <span class="separator"> /</span>
+      <li
+        itemprop="itemListElement"
+        itemscope
+        itemtype="http://schema.org/ListItem"
+      >
+        <span itemprop="name">Текущая дисциплина</span
+        ><meta
+          itemprop="item"
+          content="/inside/students/subjects/2366709"
+        /><meta itemprop="position" content="2" />
+      </li>
+    </ol>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body list-group p-0">
+          <div class="list-group-item">
+            <h3 class="page__title m-0">Базы данных</h3>
+          </div>
+          <div class="list-group-item">
+            <h5>
+              Кафедра:
+              <span class="fw-light lh-base"
+                >Кафедра прикладной математики</span
+              >
+            </h5>
+          </div>
+          <div class="list-group-item">
+            <h5>
+              Год / семестр:
+              <span class="fw-light lh-base">
+                <span>2023</span> /
+                <span>весенний</span>
+              </span>
+            </h5>
+          </div>
+          <div class="list-group-item">
+            <small class="float-end text-muted"></small>
+            <h5>Тип контроля: <span class="fw-light lh-base">Экзамен</span></h5>
+          </div>
+          <div class="list-group-item">
+            <small class="float-end text-muted"></small>
+            <h5>
+              Оценка за аттестацию: <span class="fw-light lh-base"></span>
+            </h5>
+          </div>
+          <div class="list-group-item">
+            <small class="float-end text-muted"></small>
+            <h5 class="text-danger">Аттестация пройдёт:</h5>
+            <a
+              class="link-switch link-switch-blue"
+              target="_blank"
+              href="http://raspsess.guap.ru"
+            >
+              <span class="fw-light lh-base"> по расписанию </span>
+            </a>
+          </div>
+         
+
+          <div class="list-group-item">
+            <div class="col-6 mb-2">
+              <a
+                class="btn btn-primary btn-sm"
+                target="_blank"
+                href="/inside/eduplan/348096bae50f9e0d55ec4010d5c3683f/download"
+              >
+                <i class="fa fa-paste"></i>&nbsp; Аннотация
+              </a>
+            </div>
+          </div>
+          <div class="list-group-item">
+            <small class="float-end text-muted"></small>
+            <div class="btn-group">
+              <a
+                href="https://witeboard.com/0f9d0230-3c7b-46d7-af93-de7931077ac6"
+                class="btn-default btn btn-sm"
+                style="font-size: medium; color: rgb(115, 0, 160)"
+                ><strong>Перейти к доске</strong></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <h4 class="card-header underline__info">Преподаватель</h4>
+        <div class="card-body list-group p-0">
+          <div class="list-group-item">
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-8 col-xs-12">
+                <div
+                  class="float-start me-2 profile_image_wrap profile_image_xsm outline-primary list-group-item-foto"
+                >
+                  <a href="/inside/profile/201">
+                    <img
+                      alt="logo"
+                      class="profile_image"
+                      src="static/images/no_image.jpg"
+                    />
+                  </a>
+                </div>
+                <h5>
+                  <a href="/inside/profile/201">
+                    Галанина Валентина Александровна
+                  </a>
+                </h5>
+                <div class="small">доцент</div>
+              </div>
+              <div class="text-right col-lg-6 col-md-4 col-sm-4 col-xs-12">
+                <div class="text-end clearfix my-1">
+                  <span class="text-muted">Типы занятий: </span>
+                  <span class="flabel"> Пр </span>
+                  <span class="flabel"> ЛР </span>
+                  <span class="flabel"> Э </span>
+                  <span class="flabel"> Ко </span>
+                  <span class="flabel"> Л </span>
+                </div>
+                <div class="text-end clearfix my-1">
+                  <span class="text-muted">Группы: </span>
+                  <span class="flabel">М921</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul
+        class="nav nav-tabs tabs-animate shadow-sm"
+        id="myTabs"
+        role="tablist"
+      >
+        <li role="presentation">
+          <a
+            data-bs-target="#tasks"
+            role="tab"
+            id="tasks-tab"
+            data-bs-toggle="tab"
+            aria-controls="tasks"
+            aria-selected="true"
+            class="active"
+            >Задания</a
+          >
+        </li>
+
+        <li role="presentation">
+          <a
+            data-bs-target="#materials"
+            role="tab"
+            id="materials-tab"
+            data-bs-toggle="tab"
+            aria-controls="materials"
+            >Материалы</a
+          >
+        </li>
+        <div class="tab"></div>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div
+          class="tab-pane transition active"
+          role="tabpanel"
+          id="tasks"
+          aria-labelledby="tasks-tab"
+        >
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="table-responsive">
+                <h5 class="text-center"></h5>
+                <table
+                  class="table table-bordered align-middle table-striped mb-0"
+                >
+                  <tbody>
+                    <tr>
+                      <td>Название задания</td>
+                      <td>Выполнение</td>
+                      <td>Баллы</td>
+                      <td class="text-right"></td>
+                    </tr>
+                    {% for t in practice %}
+                        <tr>
+                            <td>Практическая работа {{t.number}}</td>
+                            <td>
+                                <span class="text-success"></span>
+                            </td>
+                            <td class="text-center">0/{{t.max}}</td>
+                            <td class="text-right">
+                                <div class="btn-group">
+                                <a href="/practice/{{t.pk}}/" class="btn-default btn btn-sm" >Смотреть</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% for t in test %}
+                        <tr>
+                            <td> Тест {{t.number}}</td>
+                            <td>
+                                <span class="text-success"></span>
+                            </td>
+                            <td class="text-center">0/10</td>
+                            <td class="text-right">
+                                <div class="btn-group">
+                                <a href="/inside/student/tasks/98772" class="btn-default btn btn-sm" >Смотреть</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="tab-pane transition"
+          role="tabpanel"
+          id="materials"
+          aria-labelledby="materials-tab"
+        >
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="text-center"></h5>
+              <table
+                class="table table-bordered align-middle table-striped mb-0"
+              >
+                <tbody>
+                    {% for i in videos %}
+                        <tr>
+                            <td>Лекция {{i.number}}</td>
+                            <td class="text-center">
+                            <a
+                                href="/lection/{{i.pk}}"
+                                class="btn-default btn btn-sm"
+                                target="_blank"
+                                >Смотреть</a
+                            >
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

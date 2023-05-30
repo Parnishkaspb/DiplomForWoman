@@ -1,22 +1,175 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Создание задания
+    Добавление видео
 {% endblock %}
-
+{% comment %} 
 {% block sidebar %}
     <div class="list-group">
         <a href="/createTask" class="list-group-item list-group-item-action">Создать тестовое задание</a>
     </div>
     <p class='success'> {{success}} </p>
-{% endblock %}
+{% endblock %} {% endcomment %}
 
 
 {% block content %}
-    <form action="/createVideo" method="post" enctype="multipart/form-data">
+    <div class="breadcrumb__container">
+        <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList" >
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="/createTask" itemprop="item">
+                    <span itemprop="name">Добавить тест</span>
+                </a>
+                <meta itemprop="position" content="1" />
+            </li>
+            <span class="separator"> / </span>
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="/createPractice" itemprop="item">
+                    <span itemprop="name">Добавить практическое задание</span>
+                </a>
+                <meta itemprop="position" content="2" />
+            </li>
+            <span class="separator"> / </span>
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" >
+                <span itemprop="name">Добавить видео</span>
+                <meta itemprop="item" content="/inside/student/reports/106174/create"/>
+                <meta itemprop="position" content="3" />
+            </li>
+        </ol>
+    </div>
+    <div class="d-flex flex-row justify-content-between align-items-center" >
+        <h3 class="page__title mb-3">Добавить видео</h3>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form action="/createVideo" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group form-group-sm">
+                    <label for="comment" class="col-2 col-xs-12 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">Описание:</label>
+                    <div class="col-10 col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
+                    {{ form.comment }}
+                    </div>
+                </div>
+                <div class="form-group my-2">
+                    <label for="file" class="col-form-label-sm col-2 col-xs-12 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">Файл отчета</label>
+                    <div class="col-10 col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
+                        <div class="wrapper-upload">
+                        <input id="file" type="file" name="file" class="d-none"/>
+                        {{ form.file }}
+                        </div>
+                    </div>
+                    <script>
+                        $(".pub-delete-file").on("click", function () {
+                            $(".wrapper-upload").removeClass("d-none");
+                            $(".wrapper-uploaded-files").addClass("d-none");
+                            $("#file-deleted").val("true");
+                        });
+                        $("#file").change(function () {
+                            $(".pub-file-info").text(this.files.item(0).name);
+                            $(".pub-file-info").removeClass("uploaded");
+                            $(".pub-download-file").remove();
+                            $("#file-deleted").val("");
+                            $(".wrapper-upload").addClass("d-none");
+                            $(".wrapper-uploaded-files").removeClass("d-none");
+                        });
+                    </script>
+                </div>
+                <p class="small mb-0">Максимальный размер - 8mb.</p>
+                <button type="submit" class="btn btn-sm btn-success">
+                    Сохранить
+                </button>
+            </form>
+        </div>
+    </div> 
+    {% comment %} <form action="/createVideo" method="post" enctype="multipart/form-data">
         {{ form.as_p }}
         {% csrf_token %}
         <button type="submit" id='reg' class="btn btn-primary"> Загрузить видео </button>
-    </form>
-
+    </form> {% endcomment %}
 {% endblock %}
+
+{% comment %} 
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form action="/inside/student/reports/106174/store" method="post" enctype="multipart/form-data" >
+            <input
+                type="hidden"
+                name="token"
+                value="149eb2c57b269937c.MCcqIseTiA166Ytg81vHkHia-H8nPM46PitxBsR6GmI.VklLRoSg_0YprOY6qQrz5EnKjid9CfpJS3QbN485Ugl1dx9B8vbuezWZsw"
+            />
+            <div class="form-group form-group-sm">
+                <label
+                for="comment"
+                class="col-2 col-xs-12 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2"
+                >Комментарий:</label
+                >
+                <div
+                class="col-10 col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10"
+                >
+                <textarea
+                    id="comment"
+                    name="comment"
+                    class="form-control form-control-sm"
+                ></textarea>
+                </div>
+            </div>
+            <div class="form-group my-2">
+                <label
+                for="file"
+                class="col-form-label-sm col-2 col-xs-12 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2"
+                >Файл отчета</label
+                >
+                <div
+                class="col-10 col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10"
+                >
+                <div class="wrapper-upload">
+                    <input
+                    id="file"
+                    type="file"
+                    name="file"
+                    class="d-none"
+                    />
+                    <input
+                    id="file-deleted"
+                    type="hidden"
+                    name="file-deleted"
+                    value=""
+                    />
+                    <a
+                    class="btn btn-info btn-outline btn-sm"
+                    onclick="$('#file').click()"
+                    >
+                    Загрузить
+                    </a>
+                </div>
+                <div class="wrapper-uploaded-files d-none">
+                    <div class="pub-file-info-wrapper">
+                    <span class="pub-file-info"></span>
+                    <span class="pub-delete-file"></span>
+                    </div>
+                </div>
+                </div>
+                <script>
+                    $(".pub-delete-file").on("click", function () {
+                        $(".wrapper-upload").removeClass("d-none");
+                        $(".wrapper-uploaded-files").addClass("d-none");
+                        $("#file-deleted").val("true");
+                    });
+                    $("#file").change(function () {
+                        $(".pub-file-info").text(this.files.item(0).name);
+                        $(".pub-file-info").removeClass("uploaded");
+                        $(".pub-download-file").remove();
+                        $("#file-deleted").val("");
+                        $(".wrapper-upload").addClass("d-none");
+                        $(".wrapper-uploaded-files").removeClass("d-none");
+                    });
+                </script>
+            </div>
+            <p class="small mb-0">Максимальный размер - 8mb.</p>
+            <button type="submit" class="btn btn-sm btn-success">
+                Сохранить
+            </button>
+        </form>
+    </div>
+</div> 
+{% endcomment %}
