@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .forms import *
 from .db import create_connection
-import json
 from .models import *
 # Create your views here.
 
@@ -54,8 +52,8 @@ def index(request):
     for v in prac:
         massive_practice.append({'number': num, 'pk': v.pk, 'max': v.number})
         num += 1
-    # print(massive_test)
-    # print(massive_practice)
+    
+    
     context = {
         'videos': massive_video,
         'test': massive_test,
@@ -119,56 +117,60 @@ def createTask(request):
     return render(request, 'appForDiplom/createTask.html', {'form': form})
 
 
-
-
-
-
-def laba(request):
-    connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')
-    cursor = connect.cursor()
-    # task = cursor.execute('SELECT * FROM AppForDiplom_question').fetchall()
-    video = cursor.execute('SELECT id, title FROM AppForDiplom_videos').fetchall()
-    video1 = cursor.execute('SELECT title, id FROM AppForDiplom_videos').fetchall()
+def test(request, id):
+    test_name = Test.objects.get(pk=id)
+    test_ques = Test_Question.objects.filter(id_T = id).values('id_Q')
+    massiveWithQuestion = []
+    number = 1
+    for i in test_ques:
+        massiveWithQuestion.append({'id': i['id_Q'], 'number': number})
+        number += 1
     
-    if video == video1:
-        print('FSDFNDKSJFNDSKFNSD')
-    else:
-        print('sadkajsndjasndkajs')
-    # "SELECT id, name FROM Student"
-    # |1|adsdasdsadas| -> json_massive
-    # "SELECT name, id FROM Student"
-    # |adsdasdsadas|1| -> json_massive
-    # json_string = {
-    #     'task': [],
-    #     'video': [],
-    # }
-    # # sss['task'] = {}
-    # number = 0
-    # # json_string['task'][number]
-    # for i in task:
-    #     txt = i[2]
-    #     txt = txt.split(',')
-    #     s = {
-    #         'number': number + 1,
-    #         'q': i[1],
-    #         'var': txt,
-    #         'answer': i[3]
-    #     }
-    #     json_string['task'].append(s)
-    #     number = number + 1
-    #     # print(i[1])
-    # # print('sdfsd')
-    # number = 0
-    # # print(video)
-    # for i in video:
-    #     s = {
-    #         'name': number + 1,
-    #         'scr': i[4],
-    #     }
-    #     json_string['video'].append(s)
-    #     number = number + 1
+    # print(massiveWithQuestion)
+    context = {
+        'massiveWithQuestion': massiveWithQuestion,
+        'type': 'Тест',
+        'name': test_name,
+    }
 
-    # return render(request, 'appForDiplom/lab.html', {'json_string': json_string})
+    return render(request, 'appForDiplom/test.html', context=context)
+
+def test_check(request, id):
+    test_ques = Test_Question.objects.filter(id_Q = id).values('id_T').first()
+    question = Question.objects.get(pk=id)
+    question_answers = question.a.split(',')
+    context = {
+        'name_question': question.q,
+        'question_answers': question_answers,
+        'main_test_id': test_ques['id_T'],
+        'id_question': id,
+        'right': 0,
+        'no_right': 0,
+        'no_right_on': 0
+        # 'question': question,
+    }
+    if request.method == "POST":
+        right_answers = question.r_a
+        answer = request.POST['question'] 
+        if answer == right_answers:
+            context['right'] = 1
+            return render(request, 'appForDiplom/test_chech.html', context=context)
+        else:
+            context['right'] = -1
+            render(request, 'appForDiplom/test_chech.html', context=context)
+        # print(request.POST)
+        # print(right_answers)
+    # question = question
+    # print(question)
+    # print()
+    # context = {
+    #     'name_question': question.q,
+    #     'question_answers': question_answers,
+    #     'main_test_id': test_ques['id_T'],
+    #     'id_question': id
+    #     # 'question': question,
+    # }
+    return render(request, 'appForDiplom/test_chech.html', context=context)
 
 def practice(request, id):
     prac = Practice.objects.get(pk = id)
@@ -187,9 +189,10 @@ def practice(request, id):
         f = open(prac.practice.path, 'r')
         fromView = request.POST['do']
         # print(fromView)
-        
+
         # ПОМЕНЯТЬ НА СВОЙ ПУТЬ!!!!
         connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')
+
         cursor = connect.cursor()
         your_select = cursor.execute(f.read()).fetchall()
         teacher_select = cursor.execute(fromView).fetchall()        
