@@ -2,21 +2,6 @@ from django.shortcuts import render, redirect
 from .forms import *
 from .db import create_connection
 from .models import *
-# Create your views here.
-
-# def index(request):
-    # cookie = HttpResponse('<h4>Проверка!</h4>')
-    # cookie.set_cookie('personal_id', 123)
-    # return cookie
-
-# def index(request):
-#     show = request.COOKIES['personal_id']
-#     return HttpResponse(f'<h4>Проверка! На куках: {show}</h4>')
-
-
-
-# def navigations():
-#     return render(request, 'appForDiplom/createTask.html')
 
 def createPractice(request):
     if request.method == "POST":
@@ -81,40 +66,40 @@ def createVideo(request):
 def createTask(request):
     teacher_lesson = Teacher_Lessons.objects.get(teacher_id = 1, lesson_id = 1)
     id_test = Teacher_Lessons_Test.objects.filter(id_TL = teacher_lesson.id)
-    # ИСПРАВИТЬ ТЕСТЫ!!!
+    
+    choise_ss = []
     for i in id_test:
-        print(i)
-    # id_T = Test.objects.filter(pk= id_test.id_test).values('pk','title')
-    # choise = []
-    # for test in id_T:
-    #     choise.append((test['pk'], test['title']))
+        id_T = Test.objects.filter(pk= i.id_test).values('pk','title')
+        choise_ss.append(id_T)
+
     choise = []
-    print(choise)
+    for test in choise_ss:
+        choise.append({'id': test[0]['pk'], 'title': test[0]['title']})
+
     if request.method == "POST":
         form = TaskForm(request.POST)
-        print(form)
         if form.is_valid():
             form = form.cleaned_data
-            test_id = form['choise']
-
+            test_id = request.POST['choise']
             new_Question = Question()
             new_Question.q = form['title']
             new_Question.a = f"'{form['answer_1']}','{form['answer_2']}','{form['answer_3']}','{form['answer_4']}'"
             new_Question.r_a = form['correct_answer']
-            id_new_question = new_Question.save()
+            new_Question.save()
             new_Test = Test_Question()
-            new_Test.id_T = test_id
-            new_Test.id_Q = id_new_question
+            new_Test.id_T = int(test_id)
+            new_Test.id_Q = new_Question.id
             new_Test.save()
 
             form = TaskForm()
-            form.fields['choise'].choices = choise
             return render(request, 'appForDiplom/createTask.html', {'form': form, 'success': 'Вы успешно добавили тест. Можете создать еще один'})
-
+        else:
+            form = TaskForm()
+            form.fields['choise'].choices = choise
+            return render(request, 'appForDiplom/createTask.html', {'form': form, 'success': 'К сожалению произошла ошибка'})
     else:
         form = TaskForm()
-        form.fields['choise'].choices = choise
-    return render(request, 'appForDiplom/createTask.html', {'form': form})
+    return render(request, 'appForDiplom/createTask.html', {'form': form, 'choise': choise})
 
 
 def test(request, id):
@@ -147,7 +132,6 @@ def test_check(request, id):
         'right': 0,
         'no_right': 0,
         'no_right_on': 0
-        # 'question': question,
     }
     if request.method == "POST":
         right_answers = question.r_a
@@ -158,18 +142,7 @@ def test_check(request, id):
         else:
             context['right'] = -1
             render(request, 'appForDiplom/test_chech.html', context=context)
-        # print(request.POST)
-        # print(right_answers)
-    # question = question
-    # print(question)
-    # print()
-    # context = {
-    #     'name_question': question.q,
-    #     'question_answers': question_answers,
-    #     'main_test_id': test_ques['id_T'],
-    #     'id_question': id
-    #     # 'question': question,
-    # }
+
     return render(request, 'appForDiplom/test_chech.html', context=context)
 
 def practice(request, id):
@@ -188,7 +161,6 @@ def practice(request, id):
     if request.method == "POST":
         f = open(prac.practice.path, 'r')
         fromView = request.POST['do']
-        # print(fromView)
 
         # ПОМЕНЯТЬ НА СВОЙ ПУТЬ!!!!
         connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')

@@ -42,11 +42,6 @@ class DoPracticeForm(forms.Form):
     }))
 
 class TaskForm(forms.Form):
-    choise = forms.ChoiceField(choices=[], label='Выбор вопроса', required=True, widget=forms.Select(attrs={
-        'class': 'form-control',
-        "id": 'choise'
-        }))
-
     title = forms.CharField(max_length=30, required=True, label='Вопрос', widget=forms.TextInput(attrs={
         "id": 'title',
         "class": 'form-control',

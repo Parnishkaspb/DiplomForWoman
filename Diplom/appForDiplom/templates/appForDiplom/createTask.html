@@ -30,8 +30,13 @@
 </div>
 
 <h3 class="page__title">Создание теста</h3>
-{% comment %} <p class="text-success "><span></span></p> {% endcomment %}
-<p class='success ms-1 mb-2'> {{success}} </p>
+{% if success == 'К сожалению произошла ошибка' %}
+    <p style='color: red'><span>{{success}}</span></p>
+{% else %}
+    <p style='color: green'><span>{{success}}</span></p>
+{% endif %}
+
+{% comment %} <p class='success ms-1 mb-2'> {{success}} </p> {% endcomment %}
 
 <div class="row">
 <div class="col-lg-6">
@@ -103,6 +108,13 @@
             <div class="table-responsive">
                 
                 <form action="/createTask" method="post">
+                    <select id='choise' name='choise' class='form-control'>
+                        <option selected> Необходимо выбрать вопрос </option>
+                        {% for i in choise %}
+                            {% comment %} {{i.id}} {% endcomment %}
+                            <option value='{{i.id}}'> {{i.title}} </option>
+                        {% endfor %}
+                    </select>
                     {{ form.as_p }}
                     {% csrf_token %}
                     <button type="submit" id='reg' class="btn btn-primary"> Сформировать вопрос </button>
