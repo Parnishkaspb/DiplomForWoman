@@ -10,3 +10,6 @@ admin.site.register(Test_Question)
 admin.site.register(Teacher_Lessons_Test)
 admin.site.register(Teacher_Lessons_Video)
 admin.site.register(Practice)
+admin.site.register(User)
+admin.site.register(User_Test)
+

@@ -84,11 +84,12 @@
 <div class="card shadow-sm">
 <div class="card-body">
 <div class="table-responsive">
-    
-    <video style='margin-left: 25%;' width="50%" height="360" controls>
-        <source src="{{ video_url }}" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
+    {% comment %} <iframe width="576" height="360" src="https://www.youtube.com/embed/kqUmaqfvZas?list=PLDx5aLuEyjFyuoxzJG5Jg2J6PmBa6xaVK" title="EXCEL VBA урок 01   выполнение SQL запросов к БД Access" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> {% endcomment %}
+    {% comment %} <iframe width="576" height="360" src="{{ video_url | safe }}" title="EXCEL VBA урок 01   выполнение SQL запросов к БД Access" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> {% endcomment %}
+
+    {% comment %} <iframe style='margin-left: 25%;' width="50%" height="360" src="{{ video_url }}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" frameborder="0" allowfullscreen></iframe> {% endcomment %}
+    {{ video_url | safe }}
+
 
 </div>
 </div>
@@ -98,68 +99,4 @@
 
 </div>
 </div>
-{% comment %} <div class="card mb-3">
-    
-    <div class="card-body"> {% endcomment %}
-    {% comment %} {% for question in json_string.task %}
-        <div style='display: none; width: 70%; margin-left: 15%;' class='Question' id='block_{{question.number}}'>
-            {{ question.q }}
-            {% for option in question.var %}
-                <input type='radio' name='s_{{question.number}}' value={{ option }}> {{ option }}
-            {% endfor %}
-            <button class='answer' id='{{question.number}}'> Ответить </button>
-        </div>
-    {% endfor %} {% endcomment %}
-    
-    {% comment %} {% for video in json_string.video %} {% endcomment %}
-        
-        {% comment %} <video muted="muted" autoplay="autoplay"  loop src="/video/{{video.scr}}"  width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'> </video> {% endcomment %}
-        {% comment %} <video name='demo' muted autoplay= width='100%' height='40%' style='display: none;' class='video mr-3' id='video_{{video.name}}'>
-            <source src='{{video.scr}}' type="video/mp4"></source>
-        </video> {% endcomment %}
-    {% comment %} {% endfor %} {% endcomment %}
-    {% comment %} </div>
-</div> {% endcomment %}
-{% comment %} <script>
-    //right_answer СПРЯТАТЬ!
-    var right_answer = ['2223','1703'];
-
-    $(function(){
-        $(".videos").on("click", function(){
-            $('.Question').hide();
-            if (document.getElementById('video_'+this.id).style.display == 'none'){
-                $('.video').hide();
-                $('#video_'+this.id).show();
-            }
-
-        });
-
-        $(".step").on("click", function(){
-            $('.video').hide();
-            if (document.getElementById('block_'+this.id).style.display == 'none'){
-                $('.Question').hide();
-                $('#block_'+this.id).show();
-            }
-
-        });
-
-        $(".answer").on("click", function(){
-            var rad=document.getElementsByName('s_'+this.id);
-            for (var i=0;i<rad.length; i++) {
-                if (rad[i].checked) {
-                    rad = rad[i].value;
-                }
-            }
-
-            if (rad == right_answer[this.id-1]){
-                alert('Вы правильно ответили на вопрос');
-                document.getElementById(this.id).style.background = 'green';
-            } else {
-                alert('Вы не правильно ответили на вопрос');
-                document.getElementById(this.id).style.background = 'red';
-            }
-        });
-    }); 
-</script> {% endcomment %}
-
 {% endblock %}

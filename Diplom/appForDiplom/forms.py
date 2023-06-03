@@ -1,5 +1,5 @@
 from django import forms
-from .models import Videos, Practice
+from .models import Videos, Practice, User_Test
 
 class VideoForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea(attrs={
@@ -7,8 +7,12 @@ class VideoForm(forms.Form):
         "name": 'comment',
         "class": 'form-control form-control-sm',
     }))
-    file = forms.FileField()
-
+    file = forms.CharField( required=True, label='Ссылка на видео', widget=forms.Textarea(attrs={
+        "id": 'file',
+        "class": 'form-control',
+        "placeholder": 'Вставьте html-код видео'
+    }))
+    
 class PracticeForm(forms.ModelForm):
     class Meta:
         model = Practice
@@ -42,33 +46,50 @@ class DoPracticeForm(forms.Form):
     }))
 
 class TaskForm(forms.Form):
-    title = forms.CharField(max_length=30, required=True, label='Вопрос', widget=forms.TextInput(attrs={
+    title = forms.CharField( required=True, label='Вопрос', widget=forms.TextInput(attrs={
         "id": 'title',
         "class": 'form-control',
         "placeholder": 'Введите вопрос'
     }))
-    answer_1 = forms.CharField(max_length=50, required=True, label='1 ответ', widget=forms.TextInput(attrs={
+    answer_1 = forms.CharField( required=True, label='1 ответ', widget=forms.TextInput(attrs={
         "id": 'answer_1',
         "class": 'form-control',
         "placeholder": 'Введите ответ'
     }))
-    answer_2 = forms.CharField(max_length=50, required=True, label='2 ответ', widget=forms.TextInput(attrs={
+    answer_2 = forms.CharField( required=True, label='2 ответ', widget=forms.TextInput(attrs={
         "id": 'answer_2',
         "class": 'form-control',
         "placeholder": 'Введите ответ'
     }))
-    answer_3 = forms.CharField(max_length=50, required=True, label='3 ответ', widget=forms.TextInput(attrs={
+    answer_3 = forms.CharField( required=True, label='3 ответ', widget=forms.TextInput(attrs={
         "id": 'answer_3',
         "class": 'form-control',
         "placeholder": 'Введите ответ'
     }))
-    answer_4 = forms.CharField(max_length=50, required=True, label='4 ответ', widget=forms.TextInput(attrs={
+    answer_4 = forms.CharField( required=True, label='4 ответ', widget=forms.TextInput(attrs={
         "id": 'answer_4',
         "class": 'form-control',
         "placeholder": 'Введите ответ'
     }))
-    correct_answer = forms.CharField(max_length=50, required=True, label='Правильный ответ', widget=forms.TextInput(attrs={
+    correct_answer = forms.CharField( required=True, label='Правильный ответ', widget=forms.TextInput(attrs={
         "id": 'correct_answer',
         "class": 'form-control',
         "placeholder": 'Введите правильный ответ'
     }))
+    what_theme = forms.CharField(widget=forms.NumberInput(attrs={
+        "id": 'what_theme',
+        'type': 'hidden'
+    }))
+
+
+
+
+class UserTestForm(forms.ModelForm):
+    class Meta:
+        model = User_Test
+        fields = ['json_massive']
+        widgets = {
+            'json_massive': forms.Textarea(attrs={
+                "id": 'json_massive',
+                }),
+        }

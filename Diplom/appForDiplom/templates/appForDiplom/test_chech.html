@@ -13,6 +13,35 @@
                     <span itemprop="name">На главную страницу теста</span>
                 </a>
             </li>
+
+            {% comment %} {% if previous_id != -1 %}
+            <span class="separator"> / </span>
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="/createPractice" itemprop="item">
+                    <span itemprop="name">Предыдущий вопрос</span>
+                </a>
+                <meta itemprop="position" content="2" />
+            </li>
+            {% endif %}
+            <span class="separator"> / </span> {% endcomment %}
+
+            {% comment %} <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" >
+                <span itemprop="name">Этот вопрос</span>
+                <meta itemprop="item" content=""/>
+                <meta itemprop="position" content="3" />
+            </li> {% endcomment %}
+{% comment %}             
+            {% if next_id != -1 %}
+            <span class="separator"> / </span>
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="/createPractice" itemprop="item">
+                    <span itemprop="name">Следующий вопрос</span>
+                </a>
+                <meta itemprop="position" content="2" />
+            </li>
+            {% endif %} {% endcomment %}
+
+
         </ol>
     </div>
 
@@ -89,13 +118,27 @@
                 <div class="table-responsive">
                     {% if right != 1 %}
                         <form action="/test_check/{{id_question}}/" method="post">
-                            {% csrf_token %}
-                            {% for test in question_answers%}
-                                <input type="radio" id="{{test}}" name="question" value="{{test}}">
-                                <label for="{{test}}">{{test}}</label><br>
-                                {% comment %} <input type='radio' value='{{test}}'>  {% endcomment %}
-                            {% endfor %}
-                        <button type='submit'> Отправить вопрос </button>
+                            {% if what_do == 0 %}
+                                {% csrf_token %}
+                            {% endif %}
+                            <input type="radio" id="{{question_1}}" name="question" value="{{question_1}}">
+                            <label for="{{question_1}}">{{question_1}}</label><br>
+                            <input type="radio" id="{{question_2}}" name="question" value="{{question_2}}">
+                            <label for="{{question_2}}">{{question_2}}</label><br>
+                            <input type="radio" id="{{question_3}}" name="question" value="{{question_3}}">
+                            <label for="{{question_3}}">{{question_3}}</label><br>
+                            <input type="radio" id="{{question_4}}" name="question" value="{{question_4}}">
+                            <label for="{{question_4}}">{{question_4}}</label><br>
+                        {% if previous_id != -1 %}
+                        <a href='/test_check/{{previous_id}}/' class='btn btn-info'>Предыдущий вопрос</a>
+                        {% endif %}
+                        {% if what_do == 0 %}
+                            <button type='submit' class='btn btn-danger'> Отправить вопрос </button>
+                        {% endif %}
+                        
+                        {% if next_id != -1 %}
+                        <a href='/test_check/{{next_id}}/' class='btn btn-primary'> Следующий вопрос </a>
+                        {% endif %}
                         </form>
                     {% endif %}
                 </div>

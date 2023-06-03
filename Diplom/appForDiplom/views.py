@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import *
 from .db import create_connection
 from .models import *
+import json
 
 def createPractice(request):
     if request.method == "POST":
@@ -49,7 +50,7 @@ def index(request):
 
 def createVideo(request):
     if request.method == "POST":
-        form = VideoForm(request.POST, request.FILES)
+        form = VideoForm(request.POST)
         if form.is_valid():
             form = form.cleaned_data
             video = Videos()
@@ -66,7 +67,6 @@ def createVideo(request):
 def createTask(request):
     teacher_lesson = Teacher_Lessons.objects.get(teacher_id = 1, lesson_id = 1)
     id_test = Teacher_Lessons_Test.objects.filter(id_TL = teacher_lesson.id)
-    
     choise_ss = []
     for i in id_test:
         id_T = Test.objects.filter(pk= i.id_test).values('pk','title')
@@ -74,7 +74,7 @@ def createTask(request):
 
     choise = []
     for test in choise_ss:
-        choise.append({'id': test[0]['pk'], 'title': test[0]['title']})
+        choise.append({'id': int(test[0]['pk']), 'title': test[0]['title']})
 
     if request.method == "POST":
         form = TaskForm(request.POST)
@@ -83,7 +83,11 @@ def createTask(request):
             test_id = request.POST['choise']
             new_Question = Question()
             new_Question.q = form['title']
-            new_Question.a = f"'{form['answer_1']}','{form['answer_2']}','{form['answer_3']}','{form['answer_4']}'"
+            new_Question.a_1 = form['answer_1']
+            new_Question.a_2 = form['answer_2']
+            new_Question.a_3 = form['answer_3']
+            new_Question.a_4 = form['answer_4']
+            # new_Question.a = f"'{form['answer_1']}','{form['answer_2']}','{form['answer_3']}','{form['answer_4']}'"
             new_Question.r_a = form['correct_answer']
             new_Question.save()
             new_Test = Test_Question()
@@ -91,15 +95,15 @@ def createTask(request):
             new_Test.id_Q = new_Question.id
             new_Test.save()
 
-            form = TaskForm()
-            return render(request, 'appForDiplom/createTask.html', {'form': form, 'success': 'Вы успешно добавили тест. Можете создать еще один'})
+            form = TaskForm(initial={'what_theme': int(test_id)})
+            return render(request, 'appForDiplom/createTask.html', {'form': form, 'test_id': test_id, 'success': 'Вы успешно добавили тест. Можете создать еще один',  'choise': choise})
         else:
-            form = TaskForm()
-            form.fields['choise'].choices = choise
-            return render(request, 'appForDiplom/createTask.html', {'form': form, 'success': 'К сожалению произошла ошибка'})
+            form = TaskForm(initial={'what_theme': int(test_id)})
+            return render(request, 'appForDiplom/createTask.html', {'form': form, 'test_id': test_id, 'success': 'К сожалению произошла ошибка',  'choise': choise})
     else:
-        form = TaskForm()
-    return render(request, 'appForDiplom/createTask.html', {'form': form, 'choise': choise})
+        test_id = 0
+        form = TaskForm(initial={'what_theme': int(test_id)})
+    return render(request, 'appForDiplom/createTask.html', {'form': form, 'choise': choise, 'test_id': test_id})
 
 
 def test(request, id):
@@ -121,23 +125,86 @@ def test(request, id):
     return render(request, 'appForDiplom/test.html', context=context)
 
 def test_check(request, id):
+    # id_student передается в pro.guap через куки
+    what_do = 0
+    id_student = 1
     test_ques = Test_Question.objects.filter(id_Q = id).values('id_T').first()
+    questions_id = Test_Question.objects.filter(id_T = test_ques['id_T']).values('id_Q')
+
+    infoAboutTest = User_Test.objects.filter(id_user = id_student, id_test = test_ques['id_T']).first()
+    if infoAboutTest is None:
+        tmp_massive = []
+        for i in questions_id:
+            tmp_massive.append({
+                "id_Q": i['id_Q'],
+                "mark": -1
+            })
+        tmp_massive.append({
+                "finalMark": 0,
+            })
+        tmp_massive.append({
+                "totalMark": len(questions_id)
+            })
+        
+        newUserTest = User_Test(
+            id_user=id_student,
+            id_test=test_ques['id_T'],
+            json_massive=tmp_massive
+        )
+        newUserTest.save()
+    else:
+        json_array = infoAboutTest.json_massive
+        json_array = json_array.replace("'", '"')
+        json_array = json.loads(json_array)
+        for i in range(0, len(json_array)-2):
+            if json_array[i]['id_Q'] == id:
+                if json_array[i]['mark'] != -1:
+                    what_do = 1
+
+    where_id = 0
+    next_id = 0 
+    previous_id = 0
+    for test_id in range(0, len(questions_id)):
+        if questions_id[test_id]['id_Q'] == id:
+            where_id = test_id
+
+    try:
+        previous_id = questions_id[where_id - 1]['id_Q']
+    except:
+        previous_id = -1
+
+    try:
+        next_id = questions_id[where_id + 1]['id_Q']
+    except:
+        next_id = -1
+
     question = Question.objects.get(pk=id)
-    question_answers = question.a.split(',')
+    question_1 = question.a_1
+    question_2 = question.a_2
+    question_3 = question.a_3
+    question_4 = question.a_4
     context = {
         'name_question': question.q,
-        'question_answers': question_answers,
+        'question_1': question_1,
+        'question_2': question_2,
+        'question_3': question_3,
+        'question_4': question_4,
         'main_test_id': test_ques['id_T'],
         'id_question': id,
         'right': 0,
         'no_right': 0,
-        'no_right_on': 0
+        'no_right_on': 0,
+        'next_id': next_id,
+        'previous_id': previous_id,
+        'what_do': what_do
     }
     if request.method == "POST":
         right_answers = question.r_a
         answer = request.POST['question'] 
+
         if answer == right_answers:
             context['right'] = 1
+            # Отправка данных на сервер с 
             return render(request, 'appForDiplom/test_chech.html', context=context)
         else:
             context['right'] = -1
@@ -162,13 +229,15 @@ def practice(request, id):
         f = open(prac.practice.path, 'r')
         fromView = request.POST['do']
 
+
         # ПОМЕНЯТЬ НА СВОЙ ПУТЬ!!!!
-        connect = create_connection('/Users/bogdankrasnikov/Desktop/NastyaDiplom/Diplom/db.sqlite3')
+        connect = create_connection('C:/Users/Anastasiya/Documents/DiplomForWoman-main/Diplom/db.sqlite3')
 
         cursor = connect.cursor()
-        your_select = cursor.execute(f.read()).fetchall()
-        teacher_select = cursor.execute(fromView).fetchall()        
-        if your_select == teacher_select:
+        your_select = f.read()
+       # your_select = cursor.execute(your_select).fetchall()
+       # teacher_select = cursor.execute(fromView).fetchall()        
+        if your_select == fromView:
             context['success'] = 'Поздравляем! Вы сдали данную практику'
             return render(request, 'appForDiplom/prac.html', context=context)
         else:

@@ -107,12 +107,11 @@
         <div class="card-body">
             <div class="table-responsive">
                 
-                <form action="/createTask" method="post">
+                <form action="/createTask" method="post"> 
                     <select id='choise' name='choise' class='form-control'>
-                        <option selected> Необходимо выбрать вопрос </option>
+                        <option> Необходимо выбрать вопрос </option>
                         {% for i in choise %}
-                            {% comment %} {{i.id}} {% endcomment %}
-                            <option value='{{i.id}}'> {{i.title}} </option>
+                            <option value='{{i.id}}' {% if i.id == test_id %} selected {% endif %}> {{i.title}} </option>
                         {% endfor %}
                     </select>
                     {{ form.as_p }}

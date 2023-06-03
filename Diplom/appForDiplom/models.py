@@ -8,7 +8,9 @@ class Videos(models.Model):
     content = models.TextField(verbose_name='Дополнительный материал', blank=False)
     created_at = models.DateTimeField(auto_now_add=True,verbose_name='Дата публикации') #auto_now_add -> ставит время создания и больше его не трогает
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено') #auto_now -> ставит время обновления в бд и меняет его при каждом измнении
-    video = models.FileField(upload_to='video/%Y/%m/%d/', verbose_name='Видео', blank=True)
+    #video = models.FileField(upload_to='video/%Y/%m/%d/', verbose_name='Видео', blank=True)
+    video = models.TextField(verbose_name='Видео', blank=True)
+
 
     def __str__(self):
         return self.title
@@ -57,9 +59,12 @@ class Teacher_Lessons(models.Model):
 
 class Question(models.Model):
     q = models.CharField(max_length=255, verbose_name='Вопрос')
-    a = models.TextField(verbose_name='Варианты ответов')
+    a_1 = models.TextField(verbose_name='Вариант ответ №1', default='-')
+    a_2 = models.TextField(verbose_name='Вариант ответ №2', default='-')
+    a_3 = models.TextField(verbose_name='Вариант ответ №3', default='-')
+    a_4 = models.TextField(verbose_name='Вариант ответ №4', default='-')
     r_a = models.CharField(max_length=255, verbose_name='Правильный ответ')
-    number = models.IntegerField(verbose_name='Максимальное количество баллов', default=10)
+    number = models.IntegerField(verbose_name='Максимальное количество баллов', default=1)
 
     def __str__(self):
         return self.q
@@ -99,3 +104,12 @@ class Teacher_Lessons_Test(models.Model):
 
     class Meta:
         verbose_name_plural = 'Таблица связей Преподаватель_Предмет_Тест'
+
+
+class User(models.Model):
+    name = models.CharField(max_length=255, verbose_name='ФИО студента')
+
+class User_Test(models.Model):
+    id_user = models.IntegerField(verbose_name='ID студента')
+    id_test = models.IntegerField(verbose_name='ID теста')
+    json_massive = models.TextField(verbose_name='JSON_массив с информацией об тесте')
