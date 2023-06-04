@@ -32,7 +32,21 @@ def index(request):
 
     number = 1
     for v in test:
-        massive_test.append({'number': number, 'pk': v['id_test']})
+        userTest = User_Test.objects.filter(id_test = v['id_test']).values('json_massive')
+        try:
+            json_array = userTest[0]['json_massive']
+            json_array = json_array.replace("'", '"')
+            json_array = json.loads(json_array)
+            your_point = json_array[len(json_array)-2]['finalMark']
+            max_point = json_array[len(json_array)-1]['totalMark']
+        except:
+            max_point = 0
+            your_point = 0
+        # print(userTest)
+        # for test in userTest:
+        #     print('adaskjnas')
+        #     print(test)
+        massive_test.append({'number': number, 'pk': v['id_test'], 'max': max_point, 'your': your_point})
         number += 1
     
     num = 1
@@ -134,25 +148,29 @@ def test_check(request, id):
     infoAboutTest = User_Test.objects.filter(id_user = id_student, id_test = test_ques['id_T']).first()
     if infoAboutTest is None:
         tmp_massive = []
+        total_mark = 0
         for i in questions_id:
+            tmp_id =i['id_Q']
+            tmp = Question.objects.filter(id = tmp_id).values('number').first()
+            total_mark = total_mark + tmp['number']
             tmp_massive.append({
-                "id_Q": i['id_Q'],
+                "id_Q": tmp_id,
                 "mark": -1
             })
         tmp_massive.append({
                 "finalMark": 0,
             })
         tmp_massive.append({
-                "totalMark": len(questions_id)
+                "totalMark":total_mark
             })
-        
         newUserTest = User_Test(
             id_user=id_student,
             id_test=test_ques['id_T'],
             json_massive=tmp_massive
         )
         newUserTest.save()
-    else:
+        json_array = tmp_massive
+    else: 
         json_array = infoAboutTest.json_massive
         json_array = json_array.replace("'", '"')
         json_array = json.loads(json_array)
