@@ -221,11 +221,34 @@ def test_check(request, id):
         answer = request.POST['question'] 
         if answer == right_answers:
             context['right'] = 1
-            # Отправка данных на сервер с 
+            tmp_sum = 0
+            for i in range(0, len(json_array)):
+                if json_array[i]['mark'] == 1:
+                    tmpq = Question.objects.get(pk=json_array[i]['id_Q'])
+                    tmp_sum += tmpq.number
+                if json_array[i]['id_Q'] == id:
+                    tmp_sum += question.number
+                    json_array[i]['mark'] = 1
+
+            json_array[len(json_array)-2]['finalMark'] = tmp_sum
+            infoAboutTest.json_massive = json_array
+            infoAboutTest.save()
+            
             return render(request, 'appForDiplom/test_chech.html', context=context)
         else:
             context['right'] = -1
-            render(request, 'appForDiplom/test_chech.html', context=context)
+            tmp_sum = 0
+            for i in range(0, len(json_array)):
+                if json_array[i]['mark'] == 1:
+                    tmpq = Question.objects.get(pk=json_array[i]['id_Q'])
+                    tmp_sum += tmpq.number
+                if json_array[i]['id_Q'] == id:
+                    json_array[i]['mark'] = 0
+
+            json_array[len(json_array)-2]['finalMark'] = tmp_sum
+            infoAboutTest.json_massive = json_array
+            infoAboutTest.save()
+            return render(request, 'appForDiplom/test_chech.html', context=context)
 
     return render(request, 'appForDiplom/test_chech.html', context=context)
 
