@@ -18,7 +18,8 @@ def createPractice(request):
 
 def index(request):
     video = Videos.objects.all()
-    test = Test_Question.objects.filter(id_T=1).values('id_Q')
+    test = Teacher_Lessons_Test.objects.filter(id_TL=1).values('id_test')
+    # print(test)
     prac = Practice.objects.all()
     # print(test)
     massive_video = []
@@ -31,7 +32,7 @@ def index(request):
 
     number = 1
     for v in test:
-        massive_test.append({'number': number, 'pk': v['id_Q']})
+        massive_test.append({'number': number, 'pk': v['id_test']})
         number += 1
     
     num = 1
@@ -87,7 +88,6 @@ def createTask(request):
             new_Question.a_2 = form['answer_2']
             new_Question.a_3 = form['answer_3']
             new_Question.a_4 = form['answer_4']
-            # new_Question.a = f"'{form['answer_1']}','{form['answer_2']}','{form['answer_3']}','{form['answer_4']}'"
             new_Question.r_a = form['correct_answer']
             new_Question.save()
             new_Test = Test_Question()
@@ -96,14 +96,14 @@ def createTask(request):
             new_Test.save()
 
             form = TaskForm(initial={'what_theme': int(test_id)})
-            return render(request, 'appForDiplom/createTask.html', {'form': form, 'test_id': test_id, 'success': 'Вы успешно добавили тест. Можете создать еще один',  'choise': choise})
+            return render(request, 'appForDiplom/createTask.html', {'form': form, 'test_id': int(test_id), 'success': 'Вы успешно добавили тест. Можете создать еще один',  'choise': choise})
         else:
             form = TaskForm(initial={'what_theme': int(test_id)})
-            return render(request, 'appForDiplom/createTask.html', {'form': form, 'test_id': test_id, 'success': 'К сожалению произошла ошибка',  'choise': choise})
+            return render(request, 'appForDiplom/createTask.html', {'form': form, 'test_id': int(test_id), 'success': 'К сожалению произошла ошибка',  'choise': choise})
     else:
         test_id = 0
         form = TaskForm(initial={'what_theme': int(test_id)})
-    return render(request, 'appForDiplom/createTask.html', {'form': form, 'choise': choise, 'test_id': test_id})
+    return render(request, 'appForDiplom/createTask.html', {'form': form, 'choise': choise, 'test_id': int(test_id)})
 
 
 def test(request, id):
@@ -201,7 +201,6 @@ def test_check(request, id):
     if request.method == "POST":
         right_answers = question.r_a
         answer = request.POST['question'] 
-
         if answer == right_answers:
             context['right'] = 1
             # Отправка данных на сервер с 
@@ -256,3 +255,45 @@ def lection(request, id):
         'date_create': video.created_at
     }
     return render(request, 'appForDiplom/video.html', context=context)
+
+
+def deleteTask(request):
+    teacher_lesson = Teacher_Lessons.objects.get(teacher_id = 1, lesson_id = 1)
+    id_test = Teacher_Lessons_Test.objects.filter(id_TL = teacher_lesson.id)
+    choise_ss = []
+    for i in id_test:
+        id_T = Test.objects.filter(pk= i.id_test).values('pk','title')
+        choise_ss.append(id_T)
+
+    choise = []
+    for test in choise_ss:
+        # print(test)
+        choise.append({'id': int(test[0]['pk']), 'title': test[0]['title']})
+
+    if request.method == "POST":
+        what_test_delete = request.POST['delete']
+        instance = Test.objects.get(id=what_test_delete)
+        instance.delete()
+        instance = Teacher_Lessons_Test.objects.get(id_test=what_test_delete)
+        instance.delete()
+        redirect("deleteTask")
+
+    return render(request, 'appForDiplom/deleteTask.html', {'choise': choise})
+
+
+def newTask(request):
+    if request.method == "POST":
+        new_test = Test(title=request.POST['newtask'])
+        new_test.save()
+        new_f = Teacher_Lessons_Test(
+            id_test = new_test.id,
+            id_TL = 1
+        )
+        new_f.save()
+        # print()
+        return redirect("/createTask")
+    else:
+        return render(request, 'appForDiplom/createTask.html')
+    # new_test = Test(title=)
+    # new_test.save()
+    # redirect("createTask")

@@ -1,35 +1,42 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Добавление теста
+    Удаление теста
 {% endblock %}
 
 {% block content %}
 <div class="breadcrumb__container">
     <ol id="wo-breadcrumbs" class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList" >
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+        {% comment %} <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
             <a href="/createVideo" itemprop="item">
-                <span itemprop="name">Добавить видео</span>
+                <span itemprop="name">Удалить видео</span>
             </a>
             <meta itemprop="position" content="1" />
         </li>
         <span class="separator"> / </span>
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
             <a href="/createPractice" itemprop="item">
-                <span itemprop="name">Добавить практическое задание</span>
+                <span itemprop="name">Удалить практическое задание</span>
             </a>
             <meta itemprop="position" content="2" />
         </li>
-        <span class="separator"> / </span>
+        <span class="separator"> / </span> {% endcomment %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/" itemprop="item">
+                <span itemprop="name">На главную</span>
+            </a>
+            <meta itemprop="position" content="2" />
+        </li>
+        <span class="separator"> / </span> 
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" >
-            <span itemprop="name">Добавить тест</span>
+            <span itemprop="name">Удалить тест</span>
             <meta itemprop="item" content="/inside/student/reports/106174/create"/>
             <meta itemprop="position" content="3" />
         </li>
     </ol>
 </div>
 
-<h3 class="page__title">Создание теста</h3>
+<h3 class="page__title">Удаление теста</h3>
 {% if success == 'К сожалению произошла ошибка' %}
     <p style='color: red'><span>{{success}}</span></p>
 {% else %}
@@ -97,7 +104,7 @@
 </div>
 </div>
 
-<h4 class="page__title">Создание теста</h4>
+<h4 class="page__title">Удаление теста</h4>
 <div class="mb-2">
 
         </div>
@@ -106,32 +113,14 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="table-responsive">
-                <form action="/newTask" method="post"> 
-                    <label for='newtask'> Напишите тему для теста
-                        <input type='text' id='newtask' name='newtask' class='form-control' placeholder='Тема для теста'>
-                    </label>
+                <form action="/deleteTask" method="post"> 
                     {% csrf_token %}
-                    <button type="submit" id='reg' class="btn btn-primary"> Создать тему для теста </button>
-                </form>
-
-            </div>
-
-
-
-            <div class="table-responsive mt-4">
-                <form action="/createTask" method="post"> 
-                    <select id='choise' name='choise' class='form-control'>
-                        <option> Необходимо выбрать вопрос </option>
-                        {% for i in choise %}
-                            <option value='{{i.id}}' {% if i.id == test_id %} selected {% endif %}> {{i.title}} </option>
-                        {% endfor %}
-                    </select>
-                    {{ form.as_p }}
-                    {% csrf_token %}
-                    <button type="submit" id='reg' class="btn btn-primary"> Сформировать вопрос </button>
-                    {% if test_id != 0 %}
-                        <a href="/" class='btn btn-danger'> Завершить создание теста </a>
-                    {% endif %}
+                    {% for i in choise %}
+                        <label for='{{i.id}}' class='mt-2'> 
+                            <input type='radio' name='delete' id='{{i.id}}' value='{{i.id}}'> 
+                            <button type="submit" id='reg' class="btn btn-danger"> "{{i.title}}" --- Удалить весь тест </button>
+                        </label></br>
+                    {% endfor %}
                 </form>
 
             </div>
