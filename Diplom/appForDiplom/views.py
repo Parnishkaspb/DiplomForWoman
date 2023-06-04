@@ -19,9 +19,7 @@ def createPractice(request):
 def index(request):
     video = Videos.objects.all()
     test = Teacher_Lessons_Test.objects.filter(id_TL=1).values('id_test')
-    # print(test)
     prac = Practice.objects.all()
-    # print(test)
     massive_video = []
     massive_test = []
     massive_practice = []
@@ -42,10 +40,7 @@ def index(request):
         except:
             max_point = 0
             your_point = 0
-        # print(userTest)
-        # for test in userTest:
-        #     print('adaskjnas')
-        #     print(test)
+
         massive_test.append({'number': number, 'pk': v['id_test'], 'max': max_point, 'your': your_point})
         number += 1
     
@@ -129,7 +124,6 @@ def test(request, id):
         massiveWithQuestion.append({'id': i['id_Q'], 'number': number})
         number += 1
     
-    # print(massiveWithQuestion)
     context = {
         'massiveWithQuestion': massiveWithQuestion,
         'type': 'Тест',
@@ -222,12 +216,14 @@ def test_check(request, id):
         if answer == right_answers:
             context['right'] = 1
             tmp_sum = 0
-            for i in range(0, len(json_array)):
+            for i in range(0, len(json_array)-2):
+                print(json_array[i])
                 if json_array[i]['mark'] == 1:
                     tmpq = Question.objects.get(pk=json_array[i]['id_Q'])
                     tmp_sum += tmpq.number
                 if json_array[i]['id_Q'] == id:
                     tmp_sum += question.number
+                    print(json_array[i])
                     json_array[i]['mark'] = 1
 
             json_array[len(json_array)-2]['finalMark'] = tmp_sum
@@ -238,7 +234,7 @@ def test_check(request, id):
         else:
             context['right'] = -1
             tmp_sum = 0
-            for i in range(0, len(json_array)):
+            for i in range(0, len(json_array)-2):
                 if json_array[i]['mark'] == 1:
                     tmpq = Question.objects.get(pk=json_array[i]['id_Q'])
                     tmp_sum += tmpq.number
@@ -331,10 +327,6 @@ def newTask(request):
             id_TL = 1
         )
         new_f.save()
-        # print()
         return redirect("/createTask")
     else:
         return render(request, 'appForDiplom/createTask.html')
-    # new_test = Test(title=)
-    # new_test.save()
-    # redirect("createTask")
